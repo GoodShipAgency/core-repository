@@ -1,0 +1,19 @@
+{
+  "name": "mashbo/core-repository",
+  "description": "Mashbo Core Repository package contains shared code relating to searching and filtering repositories",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.0",
+    "doctrine/orm": "^2.7",
+    "moneyphp/money": "^4"
+  },
+  "require-dev": {
+    "vimeo/psalm": "^4.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mashbo\\CoreRepository\\": "src/"
+    }
+  }
+}

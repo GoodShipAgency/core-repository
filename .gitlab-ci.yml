@@ -1,0 +1,22 @@
+image: php:8.0
+
+stages:
+  - test
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - vendor/
+
+before_script:
+  - apt-get update
+  - apt-get install zip unzip
+  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  - php composer-setup.php
+  - php -r "unlink('composer-setup.php');"
+  - php composer.phar install
+
+linting:
+  stage: test
+  script:
+    - vendor/bin/psalm
