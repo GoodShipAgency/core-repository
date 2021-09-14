@@ -9,7 +9,8 @@ trait DateBetweenFilterTrait
     public function __construct(
         private \DateTimeImmutable $from,
         private \DateTimeImmutable $to
-    ) {}
+    ) {
+    }
 
     public function getFrom(): \DateTimeImmutable
     {
