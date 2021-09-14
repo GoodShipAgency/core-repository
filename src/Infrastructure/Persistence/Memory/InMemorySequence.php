@@ -6,7 +6,9 @@ namespace Mashbo\CoreRepository\Infrastructure\Persistence\Memory;
 
 class InMemorySequence
 {
-    public function __construct(private string $property, private int $nextId = 1) {}
+    public function __construct(private string $property, private int $nextId = 1)
+    {
+    }
 
     public function apply(object $object): int
     {

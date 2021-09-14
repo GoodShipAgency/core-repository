@@ -51,5 +51,4 @@ class PagedResult
     {
         return $this->requestedPage->previous()->getPageNumber();
     }
-
 }

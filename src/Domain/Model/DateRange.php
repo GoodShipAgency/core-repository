@@ -9,7 +9,9 @@ namespace Mashbo\CoreRepository\Domain\Model;
  */
 class DateRange
 {
-    public function __construct(private \DateTimeImmutable $from, private \DateTimeImmutable $to) {}
+    public function __construct(private \DateTimeImmutable $from, private \DateTimeImmutable $to)
+    {
+    }
 
     public function getFrom(): \DateTimeImmutable
     {
