@@ -1,6 +1,6 @@
 <?php
 
-namespace CoreRepository\Domain\Exceptions;
+namespace Mashbo\CoreRepository\Domain\Exceptions;
 
 class NoFirstResultException extends \RuntimeException
 {

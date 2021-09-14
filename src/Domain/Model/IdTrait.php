@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreRepository\Domain\Model;
+namespace Mashbo\CoreRepository\Domain\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 

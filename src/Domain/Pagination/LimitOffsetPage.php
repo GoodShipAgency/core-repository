@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreRepository\Domain\Pagination;
+namespace Mashbo\CoreRepository\Domain\Pagination;
 
 class LimitOffsetPage
 {

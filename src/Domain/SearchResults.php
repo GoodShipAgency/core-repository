@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreRepository\Domain;
+namespace Mashbo\CoreRepository\Domain;
 
 use CoreRepository\Domain\Exceptions\NoFirstResultException;
 use CoreRepository\Domain\Pagination\PagedResult;

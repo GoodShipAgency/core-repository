@@ -1,6 +1,6 @@
 <?php
 
-namespace CoreRepository\Domain\Filtering;
+namespace Mashbo\CoreRepository\Domain\Filtering;
 
 interface StringableFilter
 {

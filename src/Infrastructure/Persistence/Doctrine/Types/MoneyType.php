@@ -1,6 +1,6 @@
 <?php
 
-namespace CoreRepository\Infrastructure\Persistance\Types;
+namespace Mashbo\CoreRepository\Infrastructure\Persistance\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;

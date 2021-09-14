@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoreRepository\Domain\Filtering;
+namespace Mashbo\CoreRepository\Domain\Filtering;
 
 abstract class OrderByFilter implements Filter
 {
