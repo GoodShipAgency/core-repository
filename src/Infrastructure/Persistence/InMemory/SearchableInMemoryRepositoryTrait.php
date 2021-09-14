@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Infrastructure\Persistance\InMemory;
+namespace Mashbo\CoreRepository\Infrastructure\Persistence\InMemory;
 
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
