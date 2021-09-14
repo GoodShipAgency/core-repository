@@ -11,6 +11,7 @@ cache:
 before_script:
   - apt-get update
   - apt-get install zip unzip
+  - docker-php-ext-install bcmath
   - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
   - php composer-setup.php
   - php -r "unlink('composer-setup.php');"
