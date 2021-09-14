@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Infrastructure\Persistence\InMemory;
+namespace Mashbo\CoreRepository\Infrastructure\Persistence\Memory;
 
 class InMemorySequence
 {
