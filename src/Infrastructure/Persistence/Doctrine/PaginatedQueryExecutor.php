@@ -10,7 +10,9 @@ use Doctrine\ORM\QueryBuilder;
 
 class PaginatedQueryExecutor
 {
-    public function __construct(private \Closure $queryBuilder, private string $idProperty) {}
+    public function __construct(private \Closure $queryBuilder, private string $idProperty)
+    {
+    }
 
     /**
      * @param callable(\ArrayIterator, ?PagedResult) $callback
@@ -37,7 +39,7 @@ class PaginatedQueryExecutor
             )->setParameter(
                 'ids',
                 array_map(
-                    static fn(array $row): int => (int)$row['id'],
+                    static fn (array $row): int => (int)$row['id'],
                     $innerQueryBuilder
                         ->addSelect($this->idProperty . ' AS id')
                         ->getQuery()
@@ -58,7 +60,7 @@ class PaginatedQueryExecutor
             // The shape of the resulting array is different based on whether the query was grouped and
             // how many rows are returned
             $count = 0;
-            array_walk_recursive($idCountResult, function(string $result) use (&$count) {
+            array_walk_recursive($idCountResult, function (string $result) use (&$count) {
                 $count = (int) $count + (int) $result;
             });
 
