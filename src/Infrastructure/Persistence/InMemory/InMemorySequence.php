@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ChurchillDebtRecovery\Infrastructure\Persistence\Memory;
+namespace Mashbo\CoreRepository\Infrastructure\Persistance\InMemory;
 
 class InMemorySequence
 {

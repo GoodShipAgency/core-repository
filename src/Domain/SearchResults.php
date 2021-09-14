@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Domain;
 
-use CoreRepository\Domain\Exceptions\NoFirstResultException;
-use CoreRepository\Domain\Pagination\PagedResult;
+use Mashbo\CoreRepository\Domain\Exceptions\NoFirstResultException;
+use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Exception;
 use Traversable;
 

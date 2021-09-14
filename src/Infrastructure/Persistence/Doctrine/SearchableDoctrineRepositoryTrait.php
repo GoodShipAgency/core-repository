@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
 
-use CoreRepository\Domain\Filtering\Filter;
-use CoreRepository\Domain\Filtering\FilterList;
-use CoreRepository\Domain\Pagination\LimitOffsetPage;
-use CoreRepository\Domain\Pagination\PagedResult;
-use CoreRepository\Domain\SearchResults;
+use Mashbo\CoreRepository\Domain\Filtering\Filter;
+use Mashbo\CoreRepository\Domain\Filtering\FilterList;
+use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
+use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
+use Mashbo\CoreRepository\Domain\SearchResults;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;

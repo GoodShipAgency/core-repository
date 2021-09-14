@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
 
-
-use CoreRepository\Domain\Pagination\LimitOffsetPage;
-use CoreRepository\Domain\Pagination\PagedResult;
+use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
+use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Doctrine\ORM\QueryBuilder;
 
 class PaginatedQueryExecutor

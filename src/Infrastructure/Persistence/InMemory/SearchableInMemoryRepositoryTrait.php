@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\ChurchillDebtRecovery\Infrastructure\Persistence\Memory;
+namespace Mashbo\CoreRepository\Infrastructure\Persistance\InMemory;
 
-use CoreRepository\Domain\Filtering\Filter;
-use CoreRepository\Domain\Filtering\FilterList;
-use CoreRepository\Domain\Pagination\LimitOffsetPage;
-use CoreRepository\Domain\Pagination\PagedResult;
-use CoreRepository\Domain\SearchResults;
+use Mashbo\CoreRepository\Domain\Filtering\Filter;
+use Mashbo\CoreRepository\Domain\Filtering\FilterList;
+use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
+use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
+use Mashbo\CoreRepository\Domain\SearchResults;
 
 /**
  * @template T
