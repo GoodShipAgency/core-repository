@@ -60,6 +60,16 @@ trait SearchableDoctrineRepositoryTrait
         return $results;
     }
 
+    public function exists(FilterList $filters): bool
+    {
+        $qb = $this->getFilteredQueryBuilder($filters);
+        $qb->select($qb->expr()->count(static::$alias))
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getSingleScalarResult() > 0;
+
+    }
+
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
