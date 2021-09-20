@@ -17,9 +17,6 @@ class MoneyRange
             if (!$min->getCurrency()->equals($max->getCurrency())) {
                 throw new \LogicException("Both min and max should be in the same currency");
             }
-            if ($min->greaterThan($max)) {
-                throw new \LogicException("Invalid min/max. Min is greater than maximum");
-            }
         }
 
         if ($min === null && $max === null) {
