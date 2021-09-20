@@ -7,11 +7,11 @@ namespace Mashbo\CoreRepository\Domain\Filtering;
  */
 class FilterList implements \IteratorAggregate, \Countable
 {
-    /** @var array<int, Filter> */
+    /** @var array<array-key, Filter> */
     private array $filters;
 
     /**
-     * @param array<int, Filter> $filters
+     * @param array<array-key, Filter> $filters
      */
     public function __construct(array $filters)
     {
@@ -19,15 +19,19 @@ class FilterList implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param array<int, Filter> $filters
+     * @param array<array-key, Filter>|Filter $filter
      */
-    public static function create(array $filters): self
+    public static function create(array|Filter $filter): self
     {
-        return new self($filters);
+        if (!is_array($filter)) {
+            $filter = [$filter];
+        }
+
+        return new self($filter);
     }
 
     /**
-     * @return \ArrayIterator<int, Filter>
+     * @return \ArrayIterator<array-key, Filter>
      */
     public function getIterator(): \ArrayIterator
     {
