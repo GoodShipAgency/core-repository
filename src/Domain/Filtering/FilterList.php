@@ -19,6 +19,14 @@ class FilterList implements \IteratorAggregate, \Countable
     }
 
     /**
+     * @param array<int, Filter> $filters
+     */
+    public static function create(array $filters): self
+    {
+        return new self($filters);
+    }
+
+    /**
      * @return \ArrayIterator<int, Filter>
      */
     public function getIterator(): \ArrayIterator
