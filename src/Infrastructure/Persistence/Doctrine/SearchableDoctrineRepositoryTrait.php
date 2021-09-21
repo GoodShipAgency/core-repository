@@ -73,8 +73,9 @@ trait SearchableDoctrineRepositoryTrait
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select(static::$alias)
             ->from(static::$class, static::$alias);
+
+        $qb = $this->applySelection($qb);
 
         $_appliedFilters = [];
 
@@ -101,5 +102,10 @@ trait SearchableDoctrineRepositoryTrait
     private static function getAliasedIdProperty(): string
     {
         return sprintf('%s.%s', static::$alias, static::$idProperty);
+    }
+
+    protected function applySelection(QueryBuilder $qb): QueryBuilder
+    {
+        return $qb->select(static::$alias);
     }
 }
