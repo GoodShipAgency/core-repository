@@ -85,6 +85,14 @@ trait SearchableDoctrineRepositoryTrait
 
         $appliedFilters[] = $filter;
 
+        if ($filter instanceof FilterList) {
+            foreach ($filter->getIterator() as $childFilter) {
+                $this->filterQueryBuilder($qb, $childFilter, $appliedFilters);
+            }
+
+            return $qb;
+        }
+
         return $this->applySearchFilter($qb, $filter);
     }
 
