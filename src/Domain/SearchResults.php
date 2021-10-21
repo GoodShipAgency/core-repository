@@ -6,20 +6,18 @@ namespace Mashbo\CoreRepository\Domain;
 
 use Mashbo\CoreRepository\Domain\Exceptions\NoFirstResultException;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
-use Exception;
-use Traversable;
 
 /**
  * @template T
  */
 class SearchResults implements \IteratorAggregate, \Countable
 {
-    /** @var \Iterator<int, T> */
+    /** @var \Iterator<int|string, T> */
     private \Iterator $results;
     private ?PagedResult $pageInfo;
 
     /**
-     * @param \Iterator<int, T> $results
+     * @param \Iterator<int|string, T> $results
      * @param PagedResult|null $pageInfo
      */
     public function __construct(\Iterator $results, ?PagedResult $pageInfo)
@@ -47,7 +45,7 @@ class SearchResults implements \IteratorAggregate, \Countable
         }
     }
 
-    /** @return \Iterator<int, T> */
+    /** @return \Iterator<int|string, T> */
     public function getIterator(): \Iterator
     {
         return $this->results;

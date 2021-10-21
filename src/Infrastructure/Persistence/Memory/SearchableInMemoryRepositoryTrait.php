@@ -45,6 +45,17 @@ trait SearchableInMemoryRepositoryTrait
         return new SearchResults(new \ArrayIterator($matches), null);
     }
 
+    public function exists(FilterList $filters): bool
+    {
+        foreach ($this->all() as $key => $entity) {
+            if ($this->matchesFilters($entity, $filters)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param T $entity
      */

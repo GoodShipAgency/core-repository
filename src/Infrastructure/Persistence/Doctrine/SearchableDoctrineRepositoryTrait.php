@@ -60,11 +60,22 @@ trait SearchableDoctrineRepositoryTrait
         return $results;
     }
 
+    public function exists(FilterList $filters): bool
+    {
+        $qb = $this->getFilteredQueryBuilder($filters);
+        $qb->select($qb->expr()->count(static::$alias))
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getSingleScalarResult() > 0;
+
+    }
+
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select(static::$alias)
             ->from(static::$class, static::$alias);
+
+        $qb = $this->applySelection($qb);
 
         $_appliedFilters = [];
 
@@ -99,5 +110,10 @@ trait SearchableDoctrineRepositoryTrait
     private static function getAliasedIdProperty(): string
     {
         return sprintf('%s.%s', static::$alias, static::$idProperty);
+    }
+
+    protected function applySelection(QueryBuilder $qb): QueryBuilder
+    {
+        return $qb->select(static::$alias);
     }
 }
