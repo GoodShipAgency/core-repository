@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Reports;
 
-use App\ChurchillDebtRecovery\Domain\Reports\CsvBuilder;
+use Mashbo\CoreRepository\Domain\Reports\CsvBuilder;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;

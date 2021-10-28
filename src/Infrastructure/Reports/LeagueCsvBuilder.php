@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Reports;
 
-use App\ChurchillDebtRecovery\Domain\Reports\CsvBuilder;
 use League\Csv\AbstractCsv;
 use League\Csv\Reader;
 use League\Csv\Writer;
+use Mashbo\CoreRepository\Domain\Reports\CsvBuilder;
 
 class LeagueCsvBuilder implements CsvBuilder
 {
