@@ -19,10 +19,11 @@ use Doctrine\ORM\QueryBuilder;
 trait SearchableDoctrineRepositoryTrait
 {
     private EntityManagerInterface $manager;
+    private array $appliedFilters = [];
     private static string $idProperty = 'id';
     private static string $alias = 'r';
 
-    private abstract function applySearchFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
+    abstract private function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
 
     private function getEntityManager(): EntityManagerInterface
     {
@@ -37,7 +38,11 @@ trait SearchableDoctrineRepositoryTrait
     {
         $paginator = new PaginatedQueryExecutor(
             function () use ($filters) {
-                return $this->getFilteredQueryBuilder($filters);
+                $qb = $this->getFilteredQueryBuilder($filters);
+                $this->selectAll($qb);
+                $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC');
+
+                return $qb;
             },
             static::getAliasedIdProperty()
         );
@@ -50,10 +55,7 @@ trait SearchableDoctrineRepositoryTrait
              * @return SearchResults<T>
              */
             function (\ArrayIterator $results, ?PagedResult $pageInfo): SearchResults {
-                return new SearchResults(
-                    $results,
-                    $pageInfo
-                );
+                return new SearchResults($results, $pageInfo);
             }
         );
 
@@ -72,39 +74,35 @@ trait SearchableDoctrineRepositoryTrait
 
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
+        $this->resetAppliedFilters();
+
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->from(static::$class, static::$alias);
 
-        $qb = $this->applySelection($qb);
-
-        $_appliedFilters = [];
-
         foreach ($filters->getIterator() as $filter) {
-            $qb = $this->filterQueryBuilder($qb, $filter, $_appliedFilters);
+            $this->findAndApplyFilter($qb, $filter);
         }
-
-        $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC');
 
         return $qb;
     }
 
-    private function filterQueryBuilder(QueryBuilder $qb, Filter $filter, array &$appliedFilters): QueryBuilder
+    private function findAndApplyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder
     {
-        if (in_array($filter, $appliedFilters, false)) {
+        if ($this->isFilterApplied($filter)) {
             return $qb;
         }
 
-        $appliedFilters[] = $filter;
+        $this->registerAppliedFilter($filter);
 
         if ($filter instanceof FilterList) {
             foreach ($filter->getIterator() as $childFilter) {
-                $this->filterQueryBuilder($qb, $childFilter, $appliedFilters);
+                $this->findAndApplyFilter($qb, $childFilter);
             }
 
             return $qb;
         }
 
-        return $this->applySearchFilter($qb, $filter);
+        return $this->applyFilter($qb, $filter);
     }
 
     private static function getAliasedIdProperty(): string
@@ -112,8 +110,23 @@ trait SearchableDoctrineRepositoryTrait
         return sprintf('%s.%s', static::$alias, static::$idProperty);
     }
 
-    protected function applySelection(QueryBuilder $qb): QueryBuilder
+    protected function selectAll(QueryBuilder $qb): QueryBuilder
     {
-        return $qb->select(static::$alias);
+        return $qb->addSelect(static::$alias);
+    }
+
+    private function resetAppliedFilters(): void
+    {
+        $this->appliedFilters = [];
+    }
+
+    private function isFilterApplied(Filter $filter): bool
+    {
+        return array_key_exists(get_class($filter), $this->appliedFilters);
+    }
+
+    private function registerAppliedFilter(Filter $filter): void
+    {
+        $this->appliedFilters[get_class($filter)] = $filter;
     }
 }
