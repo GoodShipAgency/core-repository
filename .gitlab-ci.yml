@@ -10,7 +10,7 @@ cache:
     - tools/
 
 composer:
-  stage: prebuild
+  stage: test
   services: []
   before_script:
     - apt-get update
