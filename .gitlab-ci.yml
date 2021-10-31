@@ -7,17 +7,37 @@ cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
     - vendor/
+    - tools/
 
-before_script:
-  - apt-get update
-  - apt-get install zip unzip
-  - docker-php-ext-install bcmath
-  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-  - php composer-setup.php
-  - php -r "unlink('composer-setup.php');"
-  - php composer.phar install
-
-linting:
-  stage: test
+composer:
+  stage: prebuild
+  services: []
+  before_script:
+    - apt-get update
+    - apt-get install zip unzip
+    - docker-php-ext-install bcmath
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php
+    - php -r "unlink('composer-setup.php');"
   script:
-    - vendor/bin/psalm
+    - composer install
+    - composer install --working-dir=tools/php-cs-fixer/
+
+pslam:
+  stage: test
+  services: []
+  before_script: []
+  script:
+    - vendor/bin/psalm --version
+    - vendor/bin/psalm --no-cache
+  needs: ["composer"]
+
+php-cs-fixer:
+  stage: test
+  services: []
+  before_script: []
+  allow_failure: true
+  script:
+    - tools/php-cs-fixer/vendor/bin/php-cs-fixer --version
+    - tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+  needs: ["composer"]

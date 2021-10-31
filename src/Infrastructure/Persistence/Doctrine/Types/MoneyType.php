@@ -19,11 +19,10 @@ class MoneyType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
     {
-        if (!is_string($value)) {
+        if (!is_string($value) || !is_numeric($value)) {
             return null;
         }
 
-        /* @psalm-var numeric-string $value */
         return Money::GBP($value);
     }
 

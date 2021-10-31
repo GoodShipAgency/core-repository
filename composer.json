@@ -6,7 +6,10 @@
   "require": {
     "php": "^8.0",
     "doctrine/orm": "^2.7",
-    "moneyphp/money": "^4"
+    "moneyphp/money": "^4",
+    "symfony/http-foundation": "^5.3",
+    "league/csv": "^9.7",
+    "iio/libmergepdf": "^4.0"
   },
   "require-dev": {
     "vimeo/psalm": "^4.10"
