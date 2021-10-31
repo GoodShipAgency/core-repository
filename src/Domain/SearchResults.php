@@ -18,12 +18,11 @@ class SearchResults implements \IteratorAggregate, \Countable
 
     /**
      * @param \Iterator<int|string, T> $results
-     * @param PagedResult|null $pageInfo
      */
     public function __construct(\Iterator $results, ?PagedResult $pageInfo)
     {
         if (!is_countable($results)) {
-            throw new \InvalidArgumentException("\$results iterator in " . __CLASS__ . " must be Countable");
+            throw new \InvalidArgumentException('$results iterator in '.__CLASS__.' must be Countable');
         }
 
         $this->results = $results;
@@ -32,9 +31,10 @@ class SearchResults implements \IteratorAggregate, \Countable
 
     public function getPageInfo(): PagedResult
     {
-        if ($this->pageInfo === null) {
-            throw new \LogicException("Search was not paginated");
+        if (null === $this->pageInfo) {
+            throw new \LogicException('Search was not paginated');
         }
+
         return $this->pageInfo;
     }
 
@@ -55,6 +55,7 @@ class SearchResults implements \IteratorAggregate, \Countable
     {
         /** @var \Countable $results */
         $results = $this->results;
+
         return count($results);
     }
 

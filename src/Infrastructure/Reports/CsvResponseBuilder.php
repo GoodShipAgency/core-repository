@@ -21,7 +21,7 @@ class CsvResponseBuilder
      */
     public function createStreamedResponse(array $headers, iterable $records, string $filename, ?string $delimiter = null): StreamedResponse
     {
-        if ($delimiter !== null) {
+        if (null !== $delimiter) {
             $this->csvBuilder->setDelimiter($delimiter);
         }
 
@@ -35,7 +35,7 @@ class CsvResponseBuilder
                 $chunks = $csv->chunk(1024);
                 foreach ($chunks as $offset => $chunk) {
                     echo $chunk;
-                    if ($offset % $flush_threshold === 0) {
+                    if (0 === $offset % $flush_threshold) {
                         flush();
                     }
                 }

@@ -23,7 +23,7 @@ class MoneyType extends Type
             return null;
         }
 
-        /** @psalm-var numeric-string $value */
+        /* @psalm-var numeric-string $value */
         return Money::GBP($value);
     }
 

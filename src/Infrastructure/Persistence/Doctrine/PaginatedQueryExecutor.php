@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
 
+use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
-use Doctrine\ORM\QueryBuilder;
 
 class PaginatedQueryExecutor
 {
@@ -39,9 +39,9 @@ class PaginatedQueryExecutor
             )->setParameter(
                 'ids',
                 array_map(
-                    static fn (array $row): int => (int)$row['id'],
+                    static fn (array $row): int => (int) $row['id'],
                     $innerQueryBuilder
-                        ->addSelect($this->idProperty . ' AS id')
+                        ->addSelect($this->idProperty.' AS id')
                         ->getQuery()
                         ->getScalarResult()
                 )
@@ -50,7 +50,7 @@ class PaginatedQueryExecutor
         $results = new \ArrayIterator($outerQueryBuilder->getQuery()->execute());
 
         $pageInfo = null;
-        if ($page !== null) {
+        if (null !== $page) {
             $idCountResult = (array) call_user_func($this->queryBuilder)
                 ->select("COUNT(DISTINCT {$this->idProperty})")
                 ->resetDQLPart('orderBy')

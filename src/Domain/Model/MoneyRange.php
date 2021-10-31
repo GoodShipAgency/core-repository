@@ -13,14 +13,14 @@ class MoneyRange
 {
     public function __construct(private ?Money $min, private ?Money $max)
     {
-        if ($min !== null && $max !== null) {
+        if (null !== $min && null !== $max) {
             if (!$min->getCurrency()->equals($max->getCurrency())) {
-                throw new \LogicException("Both min and max should be in the same currency");
+                throw new \LogicException('Both min and max should be in the same currency');
             }
         }
 
-        if ($min === null && $max === null) {
-            throw new \LogicException("A money range must either have a min or a max");
+        if (null === $min && null === $max) {
+            throw new \LogicException('A money range must either have a min or a max');
         }
     }
 

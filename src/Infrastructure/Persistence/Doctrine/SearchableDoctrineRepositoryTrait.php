@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
-
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * @template T
@@ -23,7 +22,7 @@ trait SearchableDoctrineRepositoryTrait
     private static string $idProperty = 'id';
     private static string $alias = 'r';
 
-    abstract private function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
+    abstract protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
 
     private function getEntityManager(): EntityManagerInterface
     {
@@ -32,6 +31,7 @@ trait SearchableDoctrineRepositoryTrait
 
     /**
      * @psalm-suppress MixedReturnTypeCoercion
+     *
      * @return SearchResults<T>
      */
     public function search(FilterList $filters, ?LimitOffsetPage $page): SearchResults
@@ -52,6 +52,7 @@ trait SearchableDoctrineRepositoryTrait
             $page,
             /**
              * @param $results \ArrayIterator<T>
+             *
              * @return SearchResults<T>
              */
             function (\ArrayIterator $results, ?PagedResult $pageInfo): SearchResults {
@@ -69,7 +70,6 @@ trait SearchableDoctrineRepositoryTrait
             ->setMaxResults(1);
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
-
     }
 
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder

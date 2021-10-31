@@ -1,0 +1,26 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  WAIT_COMMAND: bash -c 'while true; do echo Hit CTRL+C to stop test container; sleep 300; done'
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  build:
+    desc: Build the docker containers
+    cmds:
+      - docker build --ssh default -t app.churchillrecoverysolutions.co.uk:dev .
+
+  lint:
+    desc: Run the linting
+    cmds:
+      - ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+
+  lint:fix:
+    desc: Fix any linting or code standards automatically
+    cmds:
+      - ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes

@@ -10,8 +10,9 @@ use Mashbo\CoreRepository\Domain\Reports\Report;
 
 trait ReportableDoctrineRepositoryTrait
 {
-    abstract private function reportQueryBuilder(QueryBuilder $qb, Report $report): QueryBuilder;
-    abstract private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder;
+    abstract protected function reportQueryBuilder(QueryBuilder $qb, Report $report): QueryBuilder;
+
+    abstract protected function getFilteredQueryBuilder(FilterList $filters): QueryBuilder;
 
     /**
      * @psalm-suppress MoreSpecificReturnType
@@ -28,7 +29,7 @@ trait ReportableDoctrineRepositoryTrait
             $report->addRecordFromArray($result);
         }
 
-        /**
+        /*
          * @psalm-suppress InvalidStringClass
          * @psalm-suppress LessSpecificReturnStatement
          */
