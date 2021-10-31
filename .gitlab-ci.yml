@@ -20,8 +20,8 @@ composer:
     - php composer-setup.php
     - php -r "unlink('composer-setup.php');"
   script:
-    - composer install
-    - composer install --working-dir=tools/php-cs-fixer/
+    - php composer.phar install
+    - php composer.phar install --working-dir=tools/php-cs-fixer/
 
 pslam:
   stage: test
