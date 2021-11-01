@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -19,11 +21,10 @@ class MoneyType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
     {
-        if (!is_string($value)) {
+        if (!is_string($value) || !is_numeric($value)) {
             return null;
         }
 
-        /** @psalm-var numeric-string $value */
         return Money::GBP($value);
     }
 

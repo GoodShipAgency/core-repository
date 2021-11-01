@@ -11,7 +11,7 @@ abstract class OrderByFilter implements Filter
 
     public function __construct(private string $order)
     {
-        if (!in_array($order, [self::ORDER_DESC, self::ORDER_ASC])) {
+        if (!in_array($order, [self::ORDER_DESC, self::ORDER_ASC], true)) {
             throw new \LogicException("Order must be DESC or ASC. '{$order}' given.");
         }
     }

@@ -29,13 +29,12 @@ class InMemorySequence
             return $id;
         }
 
-        throw new \LogicException(
-            "The {$this->property} of this " . get_class($object) . " object was neither an integer nor null"
-        );
+        throw new \LogicException("The {$this->property} of this ".get_class($object).' object was neither an integer nor null');
     }
 
     /**
      * @param iterable<int,object> $objects
+     *
      * @return array<int,int>
      */
     public function applyAll(iterable $objects): array
@@ -44,6 +43,7 @@ class InMemorySequence
         foreach ($objects as $object) {
             $ids[] = $this->apply($object);
         }
+
         return $ids;
     }
 }
