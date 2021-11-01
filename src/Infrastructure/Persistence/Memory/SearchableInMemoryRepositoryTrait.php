@@ -16,10 +16,11 @@ use Mashbo\CoreRepository\Domain\SearchResults;
 trait SearchableInMemoryRepositoryTrait
 {
     /** @param T $entity */
-    abstract private function matchesFilter(mixed $entity, Filter $filter): bool;
+    abstract protected function matchesFilter(mixed $entity, Filter $filter): bool;
 
     /**
      * @psalm-suppress UnusedParam
+     *
      * @param T $a
      * @param T $b
      */
@@ -54,7 +55,7 @@ trait SearchableInMemoryRepositoryTrait
             }
         );
 
-        /** @psalm-suppress MixedArgument */
+        /* @psalm-suppress MixedArgument */
         usort(
             $results,
             function (mixed $a, mixed $b) use ($filters) {
