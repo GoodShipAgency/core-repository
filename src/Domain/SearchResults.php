@@ -31,7 +31,7 @@ class SearchResults implements \IteratorAggregate, \Countable
 
     public function getPageInfo(): PagedResult
     {
-        if (null === $this->pageInfo) {
+        if ($this->pageInfo === null) {
             throw new \LogicException('Search was not paginated');
         }
 

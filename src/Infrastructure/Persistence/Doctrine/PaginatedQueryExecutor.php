@@ -50,7 +50,7 @@ class PaginatedQueryExecutor
         $results = new \ArrayIterator($outerQueryBuilder->getQuery()->execute());
 
         $pageInfo = null;
-        if (null !== $page) {
+        if ($page !== null) {
             $idCountResult = (array) call_user_func($this->queryBuilder)
                 ->select("COUNT(DISTINCT {$this->idProperty})")
                 ->resetDQLPart('orderBy')

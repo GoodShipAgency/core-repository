@@ -21,7 +21,7 @@ class LeagueCsvBuilder implements CsvBuilder
         $csv = Writer::createFromPath('php://temp', 'r+');
         $csv->setOutputBOM(Reader::BOM_UTF8);
 
-        if (null !== $this->delimiter) {
+        if ($this->delimiter !== null) {
             $csv->setDelimiter($this->delimiter);
         }
 

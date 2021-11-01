@@ -18,7 +18,7 @@ trait IdTrait
 
     public function getId(): int
     {
-        if (null === $this->id) {
+        if ($this->id === null) {
             throw new \LogicException(sprintf('This %s entity does not yet have an ID', __CLASS__));
         }
 

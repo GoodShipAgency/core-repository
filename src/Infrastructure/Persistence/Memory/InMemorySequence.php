@@ -22,7 +22,7 @@ class InMemorySequence
             return $id;
         }
 
-        if (null === $id) {
+        if ($id === null) {
             $id = $this->nextId++;
             $property->setValue($object, $id);
 
