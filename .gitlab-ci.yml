@@ -39,5 +39,6 @@ php-cs-fixer:
   allow_failure: true
   script:
     - tools/php-cs-fixer/vendor/bin/php-cs-fixer --version
+    - cat tools/php-cs-fixer/.php-cs-fixer.php
     - tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
   needs: ["composer"]
