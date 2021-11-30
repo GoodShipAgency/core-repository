@@ -50,7 +50,7 @@ class FilterList implements \IteratorAggregate, \Countable
         return $this->merge(new FilterList([$filter]));
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->filters);
     }
