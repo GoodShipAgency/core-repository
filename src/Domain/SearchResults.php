@@ -10,7 +10,7 @@ use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 /**
  * @template T
  */
-class SearchResults implements \IteratorAggregate, \Countable
+class SearchResults implements \Traversable, \IteratorAggregate, \Countable
 {
     /** @var \Iterator<int|string, T> */
     private \Iterator $results;
