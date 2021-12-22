@@ -1,4 +1,4 @@
-image: php:8.0
+image: php:8.1
 
 stages:
   - test
@@ -38,6 +38,6 @@ php-cs-fixer:
   before_script: []
   allow_failure: true
   script:
-    - tools/php-cs-fixer/vendor/bin/php-cs-fixer --version
-    - tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+    - PHP_CS_FIXER_IGNORE_ENV=true tools/php-cs-fixer/vendor/bin/php-cs-fixer --version
+    - PHP_CS_FIXER_IGNORE_ENV=true tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
   needs: ["composer"]
