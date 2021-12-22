@@ -10,5 +10,6 @@ use Mashbo\CoreRepository\Domain\Model\DateRange;
 interface ReportGenerator
 {
     public function applyDateRangeContext(DateRange $dateRange): self;
+
     public function generate(FilterList $filters): Report;
 }
