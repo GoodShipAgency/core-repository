@@ -19,7 +19,8 @@ tasks:
     desc: Run the linting
     cmds:
       - |
-        ./vendor/bin/psalm --version && \
+        export PHP_CS_FIXER_IGNORE_ENV=true && \
+          ./vendor/bin/psalm --version && \
           ./vendor/bin/psalm --no-cache && \
           ./tools/php-cs-fixer/vendor/bin/php-cs-fixer --version && \
           ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
@@ -28,5 +29,6 @@ tasks:
     desc: Fix any linting or code standards automatically
     cmds:
       - |
-        ./vendor/bin/psalm && \
+        export PHP_CS_FIXER_IGNORE_ENV=true && \
+          ./vendor/bin/psalm && \
           ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
