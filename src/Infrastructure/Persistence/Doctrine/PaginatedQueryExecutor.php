@@ -39,6 +39,7 @@ class PaginatedQueryExecutor
             )->setParameter(
                 'ids',
                 array_map(
+                    /** @param array{id: int|string} $row */
                     static fn (array $row): int|string => $row['id'],
                     $innerQueryBuilder
                         ->addSelect($this->idProperty.' AS id')
