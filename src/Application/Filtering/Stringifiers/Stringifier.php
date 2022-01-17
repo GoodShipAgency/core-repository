@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Application\Filtering;
+namespace Mashbo\CoreRepository\Application\Filtering\Stringifiers;
 
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 
