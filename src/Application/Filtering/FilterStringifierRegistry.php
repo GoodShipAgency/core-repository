@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mashbo\CoreRepository\Application\Filtering;
 
 use Mashbo\CoreRepository\Application\Filtering\Exception\FilterStringifierNotFoundException;
+use Mashbo\CoreRepository\Application\Filtering\Stringifiers\Stringifier;
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 
 class FilterStringifierRegistry
