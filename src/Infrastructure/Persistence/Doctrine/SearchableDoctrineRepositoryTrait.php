@@ -72,6 +72,14 @@ trait SearchableDoctrineRepositoryTrait
         return $qb->getQuery()->getSingleScalarResult() > 0;
     }
 
+    public function count(FilterList $filters): int
+    {
+        $qb = $this->getFilteredQueryBuilder($filters);
+        $qb->select($qb->expr()->count(static::$alias));
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
         $this->resetAppliedFilters();
