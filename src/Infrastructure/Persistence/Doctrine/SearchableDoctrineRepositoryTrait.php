@@ -78,9 +78,8 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::$alias));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return $qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } else {
-
             $idCountResult = (array) $qb->select(sprintf("COUNT(DISTINCT %s)", static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
