@@ -43,6 +43,11 @@ trait SearchableInMemoryRepositoryTrait
         return false;
     }
 
+    public function count(FilterList $filters): int
+    {
+        return $this->search($filters, null)->count();
+    }
+
     /**
      * @return SearchResults<T>
      */

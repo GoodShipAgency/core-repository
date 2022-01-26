@@ -23,7 +23,7 @@ class FilterList implements \IteratorAggregate, \Countable
     /**
      * @param array<array-key, Filter>|Filter $filter
      */
-    public static function create(array|Filter $filter): self
+    public static function create(array|Filter $filter = []): self
     {
         if (!is_array($filter)) {
             $filter = [$filter];

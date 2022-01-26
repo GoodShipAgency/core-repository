@@ -72,6 +72,30 @@ trait SearchableDoctrineRepositoryTrait
         return $qb->getQuery()->getSingleScalarResult() > 0;
     }
 
+    public function count(FilterList $filters): int
+    {
+        $qb = $this->getFilteredQueryBuilder($filters);
+        $qb->select($qb->expr()->count(static::$alias));
+
+        if (empty($qb->getDQLPart('groupBy'))) {
+            return (int) $qb->getQuery()->getSingleScalarResult();
+        } else {
+            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+                ->resetDQLPart('orderBy')
+                ->getQuery()
+                ->getScalarResult();
+
+            // The shape of the resulting array is different based on whether the query was grouped and
+            // how many rows are returned
+            $count = 0;
+            array_walk_recursive($idCountResult, function (string $result) use (&$count) {
+                $count = $count + (int) $result;
+            });
+
+            return $count;
+        }
+    }
+
     private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
         $this->resetAppliedFilters();
