@@ -6,6 +6,7 @@ namespace Mashbo\CoreRepository\Infrastructure\Persistence\Memory;
 
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
+use Mashbo\CoreRepository\Domain\Filtering\OrderByFilter;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
@@ -93,6 +94,10 @@ trait SearchableInMemoryRepositoryTrait
                 continue;
             }
 
+            if ($filter instanceof OrderByFilter) {
+                continue;
+            }
+
             if (!$this->matchesFilter($entity, $filter)) {
                 return false;
             }
@@ -118,6 +123,10 @@ trait SearchableInMemoryRepositoryTrait
             }
 
             $return = $this->sortByFilter($a, $b, $filter);
+
+            if ($return !== 0) {
+                return $return;
+            }
         }
 
         return $return;
