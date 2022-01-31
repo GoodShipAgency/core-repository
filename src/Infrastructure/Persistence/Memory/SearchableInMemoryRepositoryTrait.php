@@ -95,7 +95,7 @@ trait SearchableInMemoryRepositoryTrait
             }
 
             if ($filter instanceof OrderByFilter) {
-                return true;
+                continue;
             }
 
             if (!$this->matchesFilter($entity, $filter)) {
