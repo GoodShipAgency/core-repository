@@ -8,6 +8,7 @@ use Mashbo\CoreRepository\Application\Filtering\Exception\FilterStringifierKeyAl
 use Mashbo\CoreRepository\Application\Filtering\Exception\FilterStringifierNotFoundByKeyException;
 use Mashbo\CoreRepository\Application\Filtering\Exception\FilterStringifierNotFoundException;
 use Mashbo\CoreRepository\Application\Filtering\Stringifiers\Stringifier;
+use Mashbo\CoreRepository\Application\Filtering\Stringifiers\UniqueKey;
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 
 class FilterStringifierRegistry
@@ -31,11 +32,20 @@ class FilterStringifierRegistry
         foreach ($stringifiers as $stringifier) {
             $this->stringifiers[$stringifier->getSupportedClass()] = $stringifier;
 
-            if (isset($this->stringifiersByKey[$stringifier->getKey()])) {
+            $refl = new \ReflectionClass($stringifier);
+            $uniqueKeyAttr = $refl->getAttributes(UniqueKey::class);
+
+            $uniqueKey = $stringifier->getKey();
+
+            if (count($uniqueKeyAttr) > 0) {
+                $uniqueKey = reset($uniqueKeyAttr)->getArguments()['key'];
+            }
+
+            if (isset($this->stringifiersByKey[$uniqueKey])) {
                 throw new FilterStringifierKeyAlreadyInUseException(
-                    existingStringifier: $this->stringifiersByKey[$stringifier->getKey()],
+                    existingStringifier: $this->stringifiersByKey[$uniqueKey],
                     newStringifier: $stringifier,
-                    key: $stringifier->getKey()
+                    key: $uniqueKey
                 );
             }
             $this->stringifiersByKey[$stringifier->getKey()] = $stringifier;
