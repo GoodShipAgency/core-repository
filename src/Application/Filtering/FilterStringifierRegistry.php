@@ -32,25 +32,16 @@ class FilterStringifierRegistry
         foreach ($stringifiers as $stringifier) {
             $this->stringifiers[$stringifier->getSupportedClass()] = $stringifier;
 
-            $refl = new \ReflectionClass($stringifier);
-            $uniqueKeyAttrs = $refl->getAttributes(UniqueKey::class);
+            $key = FilterStringifierRegistry::getUniqueKey($stringifier);
 
-            $uniqueKey = $stringifier->getKey();
-
-            if (count($uniqueKeyAttrs) > 0) {
-                $uniqueKeyAttr = reset($uniqueKeyAttrs);
-
-                $uniqueKey = $uniqueKeyAttr->newInstance()->key;
-            }
-
-            if (isset($this->stringifiersByKey[$uniqueKey])) {
+            if (isset($this->stringifiersByKey[$key])) {
                 throw new FilterStringifierKeyAlreadyInUseException(
-                    existingStringifier: $this->stringifiersByKey[$uniqueKey],
+                    existingStringifier: $this->stringifiersByKey[$key],
                     newStringifier: $stringifier,
-                    key: $uniqueKey
+                    key: $key
                 );
             }
-            $this->stringifiersByKey[$stringifier->getKey()] = $stringifier;
+            $this->stringifiersByKey[$key] = $stringifier;
         }
     }
 
@@ -71,5 +62,21 @@ class FilterStringifierRegistry
         }
 
         throw new FilterStringifierNotFoundByKeyException($key);
+    }
+
+    public static function getUniqueKey(Stringifier $stringifier): string
+    {
+        $refl = new \ReflectionClass($stringifier);
+        $uniqueKeyAttrs = $refl->getAttributes(UniqueKey::class);
+
+        $uniqueKey = $stringifier->getKey();
+
+        if (count($uniqueKeyAttrs) > 0) {
+            $uniqueKeyAttr = reset($uniqueKeyAttrs);
+
+            $uniqueKey = $uniqueKeyAttr->newInstance()->key;
+        }
+
+        return $uniqueKey;
     }
 }
