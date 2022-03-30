@@ -33,12 +33,15 @@ class FilterStringifierRegistry
             $this->stringifiers[$stringifier->getSupportedClass()] = $stringifier;
 
             $refl = new \ReflectionClass($stringifier);
-            $uniqueKeyAttr = $refl->getAttributes(UniqueKey::class);
+            $uniqueKeyAttrs = $refl->getAttributes(UniqueKey::class);
 
             $uniqueKey = $stringifier->getKey();
 
-            if (count($uniqueKeyAttr) > 0) {
-                $uniqueKey = reset($uniqueKeyAttr)->getArguments()['key'];
+            if (count($uniqueKeyAttrs) > 0) {
+                $uniqueKeyAttr = reset($uniqueKeyAttrs);
+                dump($uniqueKeyAttr);
+
+                $uniqueKey = $uniqueKeyAttr->getArguments()['key'];
             }
 
             if (isset($this->stringifiersByKey[$uniqueKey])) {
