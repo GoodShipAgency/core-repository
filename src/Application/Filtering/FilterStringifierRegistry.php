@@ -39,9 +39,8 @@ class FilterStringifierRegistry
 
             if (count($uniqueKeyAttrs) > 0) {
                 $uniqueKeyAttr = reset($uniqueKeyAttrs);
-                dump($uniqueKeyAttr);
 
-                $uniqueKey = $uniqueKeyAttr->getArguments()['key'];
+                $uniqueKey = $uniqueKeyAttr->newInstance()->key;
             }
 
             if (isset($this->stringifiersByKey[$uniqueKey])) {
