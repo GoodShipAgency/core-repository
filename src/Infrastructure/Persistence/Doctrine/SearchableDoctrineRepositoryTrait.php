@@ -96,9 +96,9 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::$alias));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int)$qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -107,7 +107,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int)$result;
+                $count = $count + (int) $result;
             });
 
             return $count;
