@@ -63,6 +63,7 @@ trait SearchableDoctrineRepositoryTrait
         return $results;
     }
 
+    /** @return \Generator<T> */
     public function batch(FilterList $filterList): \Generator
     {
         $qb = $this->getFilteredQueryBuilder($filterList);
@@ -75,7 +76,7 @@ trait SearchableDoctrineRepositoryTrait
         foreach ($query->toIterable() as $entity) {
             yield $entity;
 
-            // This is deprecated but still in docs.... wtf
+            // This is deprecated but still in docs. Not sure on replacement.
             $this->getEntityManager()->detach($entity);
         }
     }
