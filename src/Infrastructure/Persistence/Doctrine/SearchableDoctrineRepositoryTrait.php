@@ -74,6 +74,9 @@ trait SearchableDoctrineRepositoryTrait
 
         foreach ($query->toIterable() as $entity) {
             yield $entity;
+
+            // This is deprecated but still in docs.... wtf
+            $this->getEntityManager()->detach($entity);
         }
     }
 
