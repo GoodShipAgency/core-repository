@@ -35,11 +35,7 @@ class FilterStringifierRegistry
             $key = FilterStringifierRegistry::getUniqueKey($stringifier);
 
             if (isset($this->stringifiersByKey[$key])) {
-                throw new FilterStringifierKeyAlreadyInUseException(
-                    existingStringifier: $this->stringifiersByKey[$key],
-                    newStringifier: $stringifier,
-                    key: $key
-                );
+                throw new FilterStringifierKeyAlreadyInUseException(existingStringifier: $this->stringifiersByKey[$key], newStringifier: $stringifier, key: $key);
             }
             $this->stringifiersByKey[$key] = $stringifier;
         }

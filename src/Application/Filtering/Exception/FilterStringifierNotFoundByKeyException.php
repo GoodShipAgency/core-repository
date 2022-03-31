@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mashbo\CoreRepository\Application\Filtering\Exception;
 
 class FilterStringifierNotFoundByKeyException extends \RuntimeException

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mashbo\CoreRepository\Application\Filtering\Exception;
 
-use Mashbo\CoreRepository\Application\Filtering\Stringifiers\FilterStringifier;
-use Mashbo\CoreRepository\Domain\Filtering\Filter;
+use Mashbo\CoreRepository\Application\Filtering\Stringifiers\Stringifier;
 
 class FilterStringifierKeyAlreadyInUseException extends \LogicException
 {
-    public function __construct(FilterStringifier $existingStringifier, FilterStringifier $newStringifier, string $key)
+    public function __construct(Stringifier $existingStringifier, Stringifier $newStringifier, string $key)
     {
         $reflectionClass = new \ReflectionClass($existingStringifier);
         $existingStringifierName = $reflectionClass->getShortName();
