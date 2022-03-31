@@ -78,6 +78,15 @@ trait SearchableInMemoryRepositoryTrait
         return new SearchResults(new \ArrayIterator($results), null);
     }
 
+    public function batch(FilterList $filterList): \Generator
+    {
+        foreach ($this->all() as $_key => $entity) {
+            if ($this->matchesFilters($entity, $filterList)) {
+                yield $entity;
+            }
+        }
+    }
+
     /**
      * @param T $entity
      */
