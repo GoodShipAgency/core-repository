@@ -63,6 +63,22 @@ trait SearchableDoctrineRepositoryTrait
         return $results;
     }
 
+    public function batch(FilterList $filterList): \Generator
+    {
+        $qb = $this->getFilteredQueryBuilder($filterList);
+        $this->selectAll($qb);
+        $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC')
+            ->distinct();
+
+        $query = $qb->getQuery();
+
+        foreach ($query->toIterable() as $entity) {
+            yield $entity;
+
+            $this->getEntityManager()->clear($entity);
+        }
+    }
+
     public function exists(FilterList $filters): bool
     {
         $qb = $this->getFilteredQueryBuilder($filters);
@@ -78,9 +94,9 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::$alias));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int) $qb->getQuery()->getSingleScalarResult();
+            return (int)$qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -89,7 +105,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int) $result;
+                $count = $count + (int)$result;
             });
 
             return $count;
