@@ -7,7 +7,7 @@
     "php": "^8.0",
     "doctrine/orm": "^2.7",
     "moneyphp/money": "^4",
-    "symfony/http-foundation": "^5.3",
+    "symfony/http-foundation": "^6",
     "league/csv": "^9.7",
     "iio/libmergepdf": "^4.0"
   },
