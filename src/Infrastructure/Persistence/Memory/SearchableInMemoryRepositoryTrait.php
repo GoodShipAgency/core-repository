@@ -70,9 +70,9 @@ trait SearchableInMemoryRepositoryTrait
         );
 
         if ($page !== null) {
-            $results = array_slice($results, $page->getOffset(), $page->getLimit());
+            $pagedResults = array_slice($results, $page->getOffset(), $page->getLimit());
 
-            return new SearchResults(new \ArrayIterator($results), new PagedResult($page, count($this->all()), count($results)));
+            return new SearchResults(new \ArrayIterator($results), new PagedResult($page, count($results), count($pagedResults)));
         }
 
         return new SearchResults(new \ArrayIterator($results), null);
