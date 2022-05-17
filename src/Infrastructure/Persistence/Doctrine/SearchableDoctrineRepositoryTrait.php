@@ -167,9 +167,9 @@ trait SearchableDoctrineRepositoryTrait
 
     /**
      * @param FilterList $filters
-     * @return PaginatedQueryExecutor
+     * @return PaginatedQueryExecutorInterface
      */
-    protected function getPaginatedQueryExecutor(FilterList $filters): PaginatedQueryExecutor
+    protected function getPaginatedQueryExecutor(FilterList $filters): PaginatedQueryExecutorInterface
     {
         $paginator = new PaginatedQueryExecutor(
             function () use ($filters) {
