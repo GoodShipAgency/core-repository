@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 
-class PaginatedQueryExecutor
+class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
 {
     public function __construct(private \Closure $queryBuilder, private string $idProperty)
     {
