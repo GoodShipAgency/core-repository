@@ -31,6 +31,10 @@ trait SearchableDoctrineRepositoryTrait
         return static::$class;
     }
 
+    protected static function getAlias(): string {
+        return static::$alias;
+    }
+
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      *
@@ -77,7 +81,7 @@ trait SearchableDoctrineRepositoryTrait
     public function exists(FilterList $filters): bool
     {
         $qb = $this->getFilteredQueryBuilder($filters);
-        $qb->select($qb->expr()->count(static::$alias))
+        $qb->select($qb->expr()->count(static::getAlias()))
             ->setMaxResults(1);
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
@@ -86,7 +90,7 @@ trait SearchableDoctrineRepositoryTrait
     public function count(FilterList $filters): int
     {
         $qb = $this->getFilteredQueryBuilder($filters);
-        $qb->select($qb->expr()->count(static::$alias));
+        $qb->select($qb->expr()->count(static::getAlias()));
 
         if (empty($qb->getDQLPart('groupBy'))) {
             return (int)$qb->getQuery()->getSingleScalarResult();
@@ -112,7 +116,7 @@ trait SearchableDoctrineRepositoryTrait
         $this->resetAppliedFilters();
 
         $qb = $this->getManager()->createQueryBuilder()
-            ->from($this->getClass(), static::$alias);
+            ->from($this->getClass(), static::getAlias());
 
         foreach ($filters->getIterator() as $filter) {
             $this->findAndApplyFilter($qb, $filter);
@@ -142,12 +146,12 @@ trait SearchableDoctrineRepositoryTrait
 
     private static function getAliasedIdProperty(): string
     {
-        return sprintf('%s.%s', static::$alias, static::$idProperty);
+        return sprintf('%s.%s', static::getAlias(), static::$idProperty);
     }
 
     protected function selectAll(QueryBuilder $qb): QueryBuilder
     {
-        return $qb->addSelect(static::$alias);
+        return $qb->addSelect(static::getAlias());
     }
 
     private function resetAppliedFilters(): void
