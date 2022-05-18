@@ -51,4 +51,9 @@ class PagedResult
     {
         return $this->requestedPage->previous()->getPageNumber();
     }
+
+    public function getPage(): LimitOffsetPage
+    {
+        return $this->requestedPage;
+    }
 }
