@@ -12,7 +12,7 @@ class InMemorySequence
 
     public function apply(object $object): int
     {
-        $property = (new \ReflectionClass($object))->getProperty($this->property);
+        $property = $this->getReflectionProperty($object);
         $property->setAccessible(true);
 
         /** @var ?int|mixed $id */
@@ -29,7 +29,7 @@ class InMemorySequence
             return $id;
         }
 
-        throw new \LogicException("The {$this->property} of this ".get_class($object).' object was neither an integer nor null');
+        throw new \LogicException("The {$this->property} of this " . get_class($object) . ' object was neither an integer nor null');
     }
 
     /**
@@ -45,5 +45,25 @@ class InMemorySequence
         }
 
         return $ids;
+    }
+
+    private function getReflectionProperty(object $object): \ReflectionProperty
+    {
+        $refl = (new \ReflectionClass($object));
+
+        $property = null;
+        do {
+            if ($refl->hasProperty($this->property)) {
+                $property = $refl->getProperty($this->property);
+            } else {
+                $refl = $refl->getParentClass();
+
+                if ($refl === false) {
+                    throw new \LogicException(sprintf('Class has no %s property and class also has no parent from which it inherits property', $this->property));
+                }
+            }
+        } while ($property === null);
+
+        return $property;
     }
 }
