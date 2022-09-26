@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Domain\Model;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait IdTrait
 {
     /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
      * @psalm-suppress PropertyNotSetInConstructor
      */
+    #[ORM\Id]
+    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\GeneratedValue]
     private ?int $id = null;
 
     public function getId(): int
