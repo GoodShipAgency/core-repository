@@ -29,7 +29,7 @@ class InMemorySequence
             return $id;
         }
 
-        throw new \LogicException("The {$this->property} of this " . get_class($object) . ' object was neither an integer nor null');
+        throw new \LogicException("The {$this->property} of this ".get_class($object).' object was neither an integer nor null');
     }
 
     /**
