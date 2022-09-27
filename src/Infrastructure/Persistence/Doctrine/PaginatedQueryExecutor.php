@@ -16,6 +16,7 @@ class PaginatedQueryExecutor
 
     /**
      * @param callable(\ArrayIterator, ?PagedResult) $callback
+     *
      * @psalm-suppress MixedArgument
      * @psalm-suppress MixedMethodCall
      */
