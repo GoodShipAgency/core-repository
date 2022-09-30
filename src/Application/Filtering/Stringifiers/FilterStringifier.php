@@ -20,6 +20,7 @@ abstract class FilterStringifier implements Stringifier
 
     /**
      * @param FilterType $filter
+     *
      * @psalm-suppress MoreSpecificImplementedParamType
      *
      * @return $this
