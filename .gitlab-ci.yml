@@ -23,7 +23,7 @@ composer:
     - php composer.phar install
     - php composer.phar install --working-dir=tools/php-cs-fixer/
 
-pslam:
+psalm:
   stage: test
   services: []
   before_script: []

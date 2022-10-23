@@ -17,16 +17,22 @@ use Mashbo\CoreRepository\Domain\SearchResults;
  */
 trait SearchableDoctrineRepositoryTrait
 {
-    private EntityManagerInterface $manager;
     private array $appliedFilters = [];
     private static string $idProperty = 'id';
     private static string $alias = 'r';
 
     abstract protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
 
-    private function getEntityManager(): EntityManagerInterface
+    abstract protected function getManager(): EntityManagerInterface;
+
+    /** @return class-string<T> */
+    protected function getClass(): string
     {
-        return $this->manager;
+        return static::$class;
+    }
+
+    protected static function getAlias(): string {
+        return static::$alias;
     }
 
     /**
@@ -36,16 +42,7 @@ trait SearchableDoctrineRepositoryTrait
      */
     public function search(FilterList $filters, ?LimitOffsetPage $page): SearchResults
     {
-        $paginator = new PaginatedQueryExecutor(
-            function () use ($filters) {
-                $qb = $this->getFilteredQueryBuilder($filters);
-                $this->selectAll($qb);
-                $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC');
-
-                return $qb;
-            },
-            static::getAliasedIdProperty()
-        );
+        $paginator = $this->getPaginatedQueryExecutor($filters);
 
         /** @var SearchResults<T> $results */
         $results = $paginator->execute(
@@ -77,14 +74,14 @@ trait SearchableDoctrineRepositoryTrait
             yield $entity;
 
             // This is deprecated but still in docs. Not sure on replacement.
-            $this->getEntityManager()->detach($entity);
+            $this->getManager()->detach($entity);
         }
     }
 
     public function exists(FilterList $filters): bool
     {
         $qb = $this->getFilteredQueryBuilder($filters);
-        $qb->select($qb->expr()->count(static::$alias))
+        $qb->select($qb->expr()->count(static::getAlias()))
             ->setMaxResults(1);
 
         return $qb->getQuery()->getSingleScalarResult() > 0;
@@ -93,12 +90,12 @@ trait SearchableDoctrineRepositoryTrait
     public function count(FilterList $filters): int
     {
         $qb = $this->getFilteredQueryBuilder($filters);
-        $qb->select($qb->expr()->count(static::$alias));
+        $qb->select($qb->expr()->count(static::getAlias()));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int) $qb->getQuery()->getSingleScalarResult();
+            return (int)$qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -107,7 +104,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int) $result;
+                $count = $count + (int)$result;
             });
 
             return $count;
@@ -118,8 +115,8 @@ trait SearchableDoctrineRepositoryTrait
     {
         $this->resetAppliedFilters();
 
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->from(static::$class, static::$alias);
+        $qb = $this->getManager()->createQueryBuilder()
+            ->from($this->getClass(), static::getAlias());
 
         foreach ($filters->getIterator() as $filter) {
             $this->findAndApplyFilter($qb, $filter);
@@ -149,12 +146,12 @@ trait SearchableDoctrineRepositoryTrait
 
     private static function getAliasedIdProperty(): string
     {
-        return sprintf('%s.%s', static::$alias, static::$idProperty);
+        return sprintf('%s.%s', static::getAlias(), static::$idProperty);
     }
 
     protected function selectAll(QueryBuilder $qb): QueryBuilder
     {
-        return $qb->addSelect(static::$alias);
+        return $qb->addSelect(static::getAlias());
     }
 
     private function resetAppliedFilters(): void
@@ -170,5 +167,24 @@ trait SearchableDoctrineRepositoryTrait
     private function registerAppliedFilter(Filter $filter): void
     {
         $this->appliedFilters[get_class($filter)] = $filter;
+    }
+
+    /**
+     * @param FilterList $filters
+     * @return PaginatedQueryExecutorInterface
+     */
+    protected function getPaginatedQueryExecutor(FilterList $filters): PaginatedQueryExecutorInterface
+    {
+        $paginator = new PaginatedQueryExecutor(
+            function () use ($filters) {
+                $qb = $this->getFilteredQueryBuilder($filters);
+                $this->selectAll($qb);
+                $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC');
+
+                return $qb;
+            },
+            static::getAliasedIdProperty()
+        );
+        return $paginator;
     }
 }
