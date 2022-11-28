@@ -31,7 +31,8 @@ trait SearchableDoctrineRepositoryTrait
         return static::$class;
     }
 
-    protected static function getAlias(): string {
+    protected static function getAlias(): string
+    {
         return static::$alias;
     }
 
@@ -93,9 +94,9 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::getAlias()));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int)$qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -104,7 +105,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int)$result;
+                $count = $count + (int) $result;
             });
 
             return $count;
@@ -169,10 +170,6 @@ trait SearchableDoctrineRepositoryTrait
         $this->appliedFilters[get_class($filter)] = $filter;
     }
 
-    /**
-     * @param FilterList $filters
-     * @return PaginatedQueryExecutorInterface
-     */
     protected function getPaginatedQueryExecutor(FilterList $filters): PaginatedQueryExecutorInterface
     {
         $paginator = new PaginatedQueryExecutor(
@@ -185,6 +182,7 @@ trait SearchableDoctrineRepositoryTrait
             },
             static::getAliasedIdProperty()
         );
+
         return $paginator;
     }
 }

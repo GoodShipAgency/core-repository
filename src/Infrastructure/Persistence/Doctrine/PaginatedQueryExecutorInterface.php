@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
 
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
@@ -9,6 +11,7 @@ interface PaginatedQueryExecutorInterface
 {
     /**
      * @param callable(\ArrayIterator, ?PagedResult) $callback
+     *
      * @psalm-suppress MixedArgument
      * @psalm-suppress MixedMethodCall
      */
