@@ -41,3 +41,12 @@ php-cs-fixer:
     - PHP_CS_FIXER_IGNORE_ENV=true tools/php-cs-fixer/vendor/bin/php-cs-fixer --version
     - PHP_CS_FIXER_IGNORE_ENV=true tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
   needs: ["composer"]
+
+unit-tests:
+  stage: test
+  services: []
+  before_script: []
+  allow_failure: true
+  script:
+    - vendor/bin/phpunit
+  needs: ["composer"]
