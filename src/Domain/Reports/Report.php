@@ -8,6 +8,9 @@ use Mashbo\CoreRepository\Domain\Exceptions\NoFirstResultException;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Reports\Record\ReportRecord;
 
+/**
+ * @template-implements \IteratorAggregate<int, ReportRecord>
+ */
 abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
 {
     protected \ArrayIterator $records;
