@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Ports;
 
-use Mashbo\CoreRepository\Domain\CQRS\Command\CommandBusInterface;
-use Mashbo\CoreRepository\Domain\CQRS\Query\QueryBusInterface;
+use Mashbo\CoreRepository\Application\CQRS\Command\CommandBusInterface;
+use Mashbo\CoreRepository\Application\CQRS\Query\QueryBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Service\Attribute\Required;
 

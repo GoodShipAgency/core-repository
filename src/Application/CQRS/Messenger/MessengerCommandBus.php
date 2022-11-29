@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Application\CQRS\Messenger;
 
-use Mashbo\CoreRepository\Domain\CQRS\Command\Command;
-use Mashbo\CoreRepository\Domain\CQRS\Command\CommandBusInterface;
+use Mashbo\CoreRepository\Application\CQRS\Command\Command;
+use Mashbo\CoreRepository\Application\CQRS\Command\CommandBusInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class MessengerCommandBus implements CommandBusInterface

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Application\CQRS\Messenger;
 
+use Mashbo\CoreRepository\Application\CQRS\Command\Command;
 use Mashbo\CoreRepository\Application\CQRS\Messenger\MessengerCommandBus;
-use Mashbo\CoreRepository\Domain\CQRS\Command\Command;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;

@@ -15,6 +15,20 @@ tasks:
     cmds:
       - docker build --ssh default -t app.churchillrecoverysolutions.co.uk:dev .
 
+  composer:install:
+    desc: Install packages for tools, app and tests
+    cmds:
+        - composer i --no-scripts
+        - composer i --working-dir=./tools/php-cs-fixer/
+        - composer i --working-dir=./tools/deptrac/
+
+  composer:update:
+    desc: Update app packages
+    cmds:
+      - composer update --no-scripts
+      - composer update --working-dir=./tools/php-cs-fixer/
+      - composer update --working-dir=./tools/deptrac/
+
   host:psalm:
     cmds:
       - ./vendor/bin/psalm --version
@@ -30,6 +44,11 @@ tasks:
   host:phpunit:
     cmds:
       - ./vendor/bin/phpunit tests/Unit
+
+  host:deptrac:base:
+    desc: Run deptrac
+    cmds:
+      - tools/deptrac/vendor/bin/deptrac analyse tools/deptrac/depfile.yaml --no-cache
 
   lint:
     desc: Run the linting

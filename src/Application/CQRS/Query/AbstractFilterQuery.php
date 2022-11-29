@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Application\CQRS\Query;
 
-use Mashbo\CoreRepository\Domain\CQRS\Query\Query;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 

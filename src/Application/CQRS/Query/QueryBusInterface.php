@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Domain\CQRS\Query;
+namespace Mashbo\CoreRepository\Application\CQRS\Query;
 
 interface QueryBusInterface
 {

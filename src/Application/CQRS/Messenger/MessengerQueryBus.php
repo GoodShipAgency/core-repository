@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Application\CQRS\Messenger;
 
-use Mashbo\CoreRepository\Domain\CQRS\Query\Query;
-use Mashbo\CoreRepository\Domain\CQRS\Query\QueryBusInterface;
+use Mashbo\CoreRepository\Application\CQRS\Query\Query;
+use Mashbo\CoreRepository\Application\CQRS\Query\QueryBusInterface;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 

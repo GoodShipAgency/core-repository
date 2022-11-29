@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Application\CQRS\Messenger;
 
 use Mashbo\CoreRepository\Application\CQRS\Messenger\MessengerQueryBus;
-use Mashbo\CoreRepository\Domain\CQRS\Query\Query;
+use Mashbo\CoreRepository\Application\CQRS\Query\Query;
 use Mashbo\CoreRepository\Domain\SearchResults;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
