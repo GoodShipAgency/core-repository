@@ -8,6 +8,8 @@ use Mashbo\CoreRepository\Domain\Filtering\Filter;
 
 /**
  * @template FilterType of Filter
+ *
+ * @template-implements Stringifier<Filter>
  */
 abstract class FilterStringifier implements Stringifier
 {

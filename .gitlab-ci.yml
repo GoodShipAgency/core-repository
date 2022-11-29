@@ -22,6 +22,7 @@ composer:
   script:
     - php composer.phar install
     - php composer.phar install --working-dir=tools/php-cs-fixer/
+    - php composer.phar install --working-dir=tools/deptrac/
 
 psalm:
   stage: test
@@ -40,4 +41,23 @@ php-cs-fixer:
   script:
     - PHP_CS_FIXER_IGNORE_ENV=true tools/php-cs-fixer/vendor/bin/php-cs-fixer --version
     - PHP_CS_FIXER_IGNORE_ENV=true tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress=dots --config=tools/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+  needs: ["composer"]
+
+deptrac:
+  stage: test
+  services: []
+  before_script: []
+  allow_failure: true
+  script:
+    - tools/deptrac/vendor/bin/deptrac --version
+    - tools/deptrac/vendor/bin/deptrac analyse tools/deptrac/depfile.yaml --no-cache
+  needs: ["composer"]
+
+unit-tests:
+  stage: test
+  services: []
+  before_script: []
+  allow_failure: true
+  script:
+    - vendor/bin/phpunit
   needs: ["composer"]

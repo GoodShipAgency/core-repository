@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Domain;
 
-use Mashbo\CoreRepository\Domain\Exceptions\NoFirstResultException;
+use Mashbo\CoreRepository\Domain\Exception\NoFirstResultException;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 
 /**
  * @template T
+ *
+ * @template-implements \Traversable<int|string, T>
+ * @template-implements \IteratorAggregate<int|string, T>
  */
 class SearchResults implements \Traversable, \IteratorAggregate, \Countable
 {
