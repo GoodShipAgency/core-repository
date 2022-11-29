@@ -7,24 +7,19 @@ namespace Mashbo\CoreRepository\Domain\Model;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @psalm-immutable
  *
  * @psalm-suppress ImpureMethodCall
  */
-#[ORM\Embeddable]
 class CarbonDateRange
 {
     private bool $includeEndDate = true;
     private bool $includeLeapDays = true;
 
     public function __construct(
-        #[ORM\Column(type: 'carbon_immutable', nullable: false)]
         private readonly CarbonImmutable $from,
-
-        #[ORM\Column(type: 'carbon_immutable', nullable: false)]
         private readonly CarbonImmutable $to,
 
         bool $includeEndDate = true,
