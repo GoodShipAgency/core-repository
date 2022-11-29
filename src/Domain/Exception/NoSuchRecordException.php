@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Bridge\CoreRepository\Domain\Exception;
+namespace Mashbo\CoreRepository\Domain\Exception;
 
 class NoSuchRecordException extends \RuntimeException
 {

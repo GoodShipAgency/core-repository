@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Application\CQRS;
+namespace Mashbo\CoreRepository\Domain\CQRS\Command;
 
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 

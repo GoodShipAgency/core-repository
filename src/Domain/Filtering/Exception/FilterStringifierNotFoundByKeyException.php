@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Application\Filtering\Exception;
+namespace Mashbo\CoreRepository\Domain\Filtering\Exception;
 
 class FilterStringifierNotFoundByKeyException extends \RuntimeException
 {

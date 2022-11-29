@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Domain\Exceptions;
+namespace Mashbo\CoreRepository\Domain\Exception;
 
 class NoFirstResultException extends \RuntimeException
 {
