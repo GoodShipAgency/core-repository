@@ -17,9 +17,9 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
-    "psalm/plugin-phpunit": "^0.16.1",
-    "psalm/plugin-symfony": "^3|^4",
-    "vimeo/psalm": "5.0.0-rc1 as 4.30"
+    "psalm/plugin-phpunit": "^0.18.4",
+    "psalm/plugin-symfony": "^3|^4|^5",
+    "vimeo/psalm": "^5.9"
   },
   "autoload": {
     "psr-4": {

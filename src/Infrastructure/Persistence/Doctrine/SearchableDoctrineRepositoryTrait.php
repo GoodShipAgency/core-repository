@@ -41,7 +41,7 @@ trait SearchableDoctrineRepositoryTrait
      *
      * @return SearchResults<T>
      */
-    public function search(FilterList $filters, ?LimitOffsetPage $page): SearchResults
+    public function search(FilterList $filters, ?LimitOffsetPage $page = null): SearchResults
     {
         $paginator = $this->getPaginatedQueryExecutor($filters);
 

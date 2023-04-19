@@ -12,17 +12,18 @@ use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
  *
  * @template-implements \Traversable<int|string, T>
  * @template-implements \IteratorAggregate<int|string, T>
+ * @template-implements \ArrayAccess<int|string, T>
  */
-class SearchResults implements \Traversable, \IteratorAggregate, \Countable
+class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \ArrayAccess
 {
-    /** @var \Iterator<int|string, T> */
-    private \Iterator $results;
+    /** @var \ArrayIterator<int|string, T> */
+    private \ArrayIterator $results;
     private ?PagedResult $pageInfo;
 
     /**
-     * @param \Iterator<int|string, T> $results
+     * @param \ArrayIterator<int|string, T> $results
      */
-    public function __construct(\Iterator $results, ?PagedResult $pageInfo)
+    public function __construct(\ArrayIterator $results, ?PagedResult $pageInfo)
     {
         if (!is_countable($results)) {
             throw new \InvalidArgumentException('$results iterator in ' . __CLASS__ . ' must be Countable');
@@ -83,7 +84,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable
 
     public function toArray(): array
     {
-        return iterator_to_array($this->results);
+        return $this->results->getArrayCopy();
     }
 
     public function isEmpty(): bool
@@ -92,10 +93,10 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable
     }
 
     /**
-     * @param \Closure(T):string|int $callable
+     * @param \Closure(T):(array-key) $callable
      * @return SearchResults<T>
      */
-    public function keyBy(callable $callable): SearchResults
+    public function keyBy(\Closure $callable): SearchResults
     {
         $results = [];
         foreach ($this->results as $result) {
@@ -103,5 +104,35 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable
         }
 
         return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
+    }
+
+    /** @param int|string $offset */
+    public function offsetExists(mixed $offset): bool
+    {
+        return $this->results->offsetExists($offset);
+    }
+
+    /**
+     * @param int|string $offset
+     * @return T
+     */
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->results->offsetGet($offset);
+    }
+
+    /**
+     * @param int|string $offset
+     * @param T $value
+     */
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->results->offsetSet($offset, $value);
+    }
+
+    /** @param int|string $offset */
+    public function offsetUnset(mixed $offset): void
+    {
+        $this->results->offsetUnset($offset);
     }
 }
