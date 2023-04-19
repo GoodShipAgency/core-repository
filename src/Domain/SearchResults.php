@@ -25,7 +25,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable
     public function __construct(\Iterator $results, ?PagedResult $pageInfo)
     {
         if (!is_countable($results)) {
-            throw new \InvalidArgumentException('$results iterator in '.__CLASS__.' must be Countable');
+            throw new \InvalidArgumentException('$results iterator in ' . __CLASS__ . ' must be Countable');
         }
 
         $this->results = $results;
@@ -79,5 +79,29 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable
         foreach ($this->results as $key => $result) {
             yield $key => $callable($result);
         }
+    }
+
+    public function toArray(): array
+    {
+        return iterator_to_array($this->results);
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
+    /**
+     * @param \Closure(T):string|int $callable
+     * @return SearchResults<T>
+     */
+    public function keyBy(callable $callable): SearchResults
+    {
+        $results = [];
+        foreach ($this->results as $result) {
+            $results[$callable($result)] = $result;
+        }
+
+        return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
     }
 }
