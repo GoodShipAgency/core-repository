@@ -106,6 +106,22 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
         return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
     }
 
+    /**
+     * @param \Closure(T):(array-key) $callable
+     * @return SearchResults<T>
+     */
+    public function filter(\Closure $closure): SearchResults
+    {
+        $results = [];
+        foreach ($this->results as $key => $result) {
+            if ($closure($result)) {
+                $results[$key] = $result;
+            }
+        }
+
+        return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
+    }
+
     /** @param int|string $offset */
     public function offsetExists(mixed $offset): bool
     {

@@ -52,7 +52,7 @@ trait SearchableInMemoryRepositoryTrait
     /**
      * @return SearchResults<T>
      */
-    public function search(FilterList $filters, ?LimitOffsetPage $page): SearchResults
+    public function search(FilterList $filters, ?LimitOffsetPage $page = null): SearchResults
     {
         $results = array_filter(
             $this->all(),
