@@ -107,7 +107,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
     }
 
     /**
-     * @param \Closure(T):bool $callable
+     * @param \Closure(T):(bool) $callable
      * @return SearchResults<T>
      */
     public function filter(\Closure $closure): SearchResults
@@ -118,18 +118,6 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
                 $results[$key] = $result;
             }
         }
-
-        return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
-    }
-
-    /**
-     * @param \Closure(T):({int<-1, 1>) $callable
-     * @return SearchResults<T>
-     */
-    public function sort(\Closure $closure): SearchResults
-    {
-        $results = $this->results->getArrayCopy();
-        usort($results, $closure);
 
         return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
     }
