@@ -122,6 +122,14 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
         return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
     }
 
+    public function sort(\Closure $closure): SearchResults
+    {
+        $results = $this->results->getArrayCopy();
+        usort($results, $closure);
+
+        return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
+    }
+
     /** @param int|string $offset */
     public function offsetExists(mixed $offset): bool
     {
