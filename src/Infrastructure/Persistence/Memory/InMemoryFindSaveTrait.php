@@ -46,21 +46,8 @@ trait InMemoryFindSaveTrait
     {
         $idProperties = $this->getIdProperties(new \ReflectionClass($record));
 
-        $key = '';
+        $key = $this->getId($record);
 
-        foreach ($idProperties as $property) {
-            /** @psalm-suppress MixedAssignment */
-            $value = $property->getValue($record);
-
-            if ($this->isEntity($value)) {
-                assert(is_object($value));
-                /**
-                 * @psalm-suppress MixedAssignment
-                 */
-                $value = $this->getId($value);
-            }
-            $key .= (string)$value . '___';
-        }
         $this->records[$key] = $record;
     }
 

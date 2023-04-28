@@ -22,11 +22,6 @@ trait IdManagementTrait
      */
     protected function getId(object $record): mixed
     {
-        return $this->doGetId($record);
-    }
-
-    private function doGetId(object $record): mixed
-    {
         $refl = new \ReflectionClass($record);
 
         $properties = $this->getIdProperties($refl);
@@ -34,25 +29,12 @@ trait IdManagementTrait
         if (count($properties) === 1) {
             return reset($properties)->getValue($record);
         } elseif (count($properties) > 1) {
-            $arr = [];
-            foreach ($properties as $property) {
-                /** @psalm-suppress MixedAssignment */
-                $value = $property->getValue($record);
-
-                if ($this->isEntity($value)) {
-                    assert(is_object($value));
-                    /** @psalm-suppress MixedAssignment */
-                    $value = $this->doGetId($value);
-                }
-                /** @psalm-suppress MixedAssignment */
-                $arr[$property->getName()] = $value;
-            }
-
-            return $arr;
+            throw new \LogicException('Multiple Ids not supported');
         }
 
         throw new \Exception('No Id on model');
     }
+
 
     protected function getIdProperty(\ReflectionClass $refl): \ReflectionProperty
     {
@@ -70,7 +52,7 @@ trait IdManagementTrait
     {
         return array_filter(
             $refl->getProperties(),
-            fn (\ReflectionProperty $property): bool => count($property->getAttributes(Id::class)) > 0
+            fn(\ReflectionProperty $property): bool => count($property->getAttributes(Id::class)) > 0
         );
     }
 
