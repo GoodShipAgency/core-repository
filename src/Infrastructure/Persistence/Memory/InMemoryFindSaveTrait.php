@@ -46,7 +46,7 @@ trait InMemoryFindSaveTrait
     {
         $idProperties = $this->getIdProperties(new \ReflectionClass($record));
 
-        $key = $this->getId($record);
+        $key = (string)$this->getId($record);
 
         $this->records[$key] = $record;
     }
