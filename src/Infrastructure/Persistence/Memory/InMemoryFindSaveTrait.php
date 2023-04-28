@@ -28,7 +28,9 @@ trait InMemoryFindSaveTrait
      */
     public function find(mixed $id): object
     {
-         $record = $this->records[$id] ?? null;
+        $id = (string)$id;
+
+        $record = $this->records[$id] ?? null;
 
         if ($record === null) {
             throw $this->createNotFoundException($id);
@@ -57,7 +59,7 @@ trait InMemoryFindSaveTrait
                  */
                 $value = $this->getId($value);
             }
-            $key .= (string) $value.'___';
+            $key .= (string)$value . '___';
         }
         $this->records[$key] = $record;
     }
