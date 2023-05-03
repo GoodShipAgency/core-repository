@@ -122,6 +122,36 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
         return new SearchResults(new \ArrayIterator($results), $this->pageInfo);
     }
 
+    /** @param \Closure(T):(bool) $callable */
+    public function any(\Closure $callable): bool
+    {
+        foreach ($this->results as $result) {
+            if ($callable($result)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @param \Closure(T):(bool) $callable */
+    public function all(\Closure $callable): bool
+    {
+        foreach ($this->results as $result) {
+            if (!$callable($result)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /** @param \Closure(T):(bool) $callable */
+    public function none(\Closure $callable): bool
+    {
+        return !$this->any($callable);
+    }
+
     /** @param int|string $offset */
     public function offsetExists(mixed $offset): bool
     {
