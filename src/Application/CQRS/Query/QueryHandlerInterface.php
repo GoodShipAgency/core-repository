@@ -8,12 +8,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 /**
  * @template T
+ * @method T __invoke(Query<T> $query)
  */
 interface QueryHandlerInterface
 {
-    /**
-     * @param Query<T> $query
-     * @return T
-     */
-    public function __invoke($query);
+
 }
