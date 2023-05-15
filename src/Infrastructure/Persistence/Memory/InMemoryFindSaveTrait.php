@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Memory;
 
+use Mashbo\CoreRepository\Domain\Exception\NoSuchRecordException;
 use Mashbo\CoreRepository\Infrastructure\Persistence\IdManagementTrait;
 
 /**
@@ -27,41 +28,12 @@ trait InMemoryFindSaveTrait
      */
     public function find(mixed $id): object
     {
-        if (is_array($id)) {
-            $idProperties = $this->getIdProperties(new \ReflectionClass($this->getClass()));
-            $key = '';
-            foreach ($idProperties as $property) {
-                $idPropertyName = (string) $property->name;
+        $id = (string) $id;
 
-                assert(array_key_exists($idPropertyName, $id));
-
-                $value = $id[$idPropertyName];
-
-                if ($this->isEntity($value)) {
-                    assert(is_object($value));
-                    /**
-                     * @psalm-suppress MixedAssignment
-                     */
-                    $value = $this->getId($value);
-                }
-                $key .= (string) $value.'___';
-            }
-        } else {
-            if ($this->isEntity($id)) {
-                assert(is_object($id));
-                /**
-                 * @psalm-suppress MixedAssignment
-                 */
-                $id = $this->getId($id);
-            }
-
-            $key = (string) $id.'___';
-        }
-
-        $record = $this->records[$key] ?? null;
+        $record = $this->records[$id] ?? null;
 
         if ($record === null) {
-            throw new \LogicException('Not found');
+            throw $this->createNotFoundException($id);
         }
 
         return $record;
@@ -74,21 +46,8 @@ trait InMemoryFindSaveTrait
     {
         $idProperties = $this->getIdProperties(new \ReflectionClass($record));
 
-        $key = '';
+        $key = (string) $this->getId($record);
 
-        foreach ($idProperties as $property) {
-            /** @psalm-suppress MixedAssignment */
-            $value = $property->getValue($record);
-
-            if ($this->isEntity($value)) {
-                assert(is_object($value));
-                /**
-                 * @psalm-suppress MixedAssignment
-                 */
-                $value = $this->getId($value);
-            }
-            $key .= (string) $value.'___';
-        }
         $this->records[$key] = $record;
     }
 
@@ -96,5 +55,12 @@ trait InMemoryFindSaveTrait
     public function all(): array
     {
         return $this->records;
+    }
+
+    protected function createNotFoundException(mixed $id): \Exception
+    {
+        return new NoSuchRecordException(
+            sprintf('No "%s" record found with id "%s"', $this->getClass(), $id)
+        );
     }
 }
