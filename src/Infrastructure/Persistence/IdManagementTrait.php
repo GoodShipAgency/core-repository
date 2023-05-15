@@ -35,7 +35,6 @@ trait IdManagementTrait
         throw new \Exception('No Id on model');
     }
 
-
     protected function getIdProperty(\ReflectionClass $refl): \ReflectionProperty
     {
         foreach ($refl->getProperties() as $property) {
@@ -52,7 +51,7 @@ trait IdManagementTrait
     {
         return array_filter(
             $refl->getProperties(),
-            fn(\ReflectionProperty $property): bool => count($property->getAttributes(Id::class)) > 0
+            fn (\ReflectionProperty $property): bool => count($property->getAttributes(Id::class)) > 0
         );
     }
 

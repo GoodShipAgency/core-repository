@@ -26,7 +26,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
     public function __construct(\ArrayIterator $results, ?PagedResult $pageInfo)
     {
         if (!is_countable($results)) {
-            throw new \InvalidArgumentException('$results iterator in ' . __CLASS__ . ' must be Countable');
+            throw new \InvalidArgumentException('$results iterator in '.__CLASS__.' must be Countable');
         }
 
         $this->results = $results;
@@ -94,6 +94,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
 
     /**
      * @param \Closure(T):(array-key) $callable
+     *
      * @return SearchResults<T>
      */
     public function keyBy(\Closure $callable): SearchResults
@@ -108,6 +109,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
 
     /**
      * @param \Closure(T):(bool) $callable
+     *
      * @return SearchResults<T>
      */
     public function filter(\Closure $closure): SearchResults
@@ -160,6 +162,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
 
     /**
      * @param int|string $offset
+     *
      * @return T
      */
     public function offsetGet(mixed $offset): mixed
@@ -169,7 +172,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
 
     /**
      * @param int|string $offset
-     * @param T $value
+     * @param T          $value
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {

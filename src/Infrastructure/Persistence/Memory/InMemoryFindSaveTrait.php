@@ -28,7 +28,7 @@ trait InMemoryFindSaveTrait
      */
     public function find(mixed $id): object
     {
-        $id = (string)$id;
+        $id = (string) $id;
 
         $record = $this->records[$id] ?? null;
 
@@ -46,7 +46,7 @@ trait InMemoryFindSaveTrait
     {
         $idProperties = $this->getIdProperties(new \ReflectionClass($record));
 
-        $key = (string)$this->getId($record);
+        $key = (string) $this->getId($record);
 
         $this->records[$key] = $record;
     }

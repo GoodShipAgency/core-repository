@@ -29,7 +29,6 @@ trait DoctrineFindSaveTrait
      * @param TId $id
      *
      * @return T
-     *
      */
     public function find(mixed $id): object
     {
@@ -55,7 +54,7 @@ trait DoctrineFindSaveTrait
     protected function createNotFoundException(mixed $id): \Exception
     {
         return new NoSuchRecordException(
-            sprintf('No "%s" record found with id "%s"', $this->getClass(), (string)$id)
+            sprintf('No "%s" record found with id "%s"', $this->getClass(), (string) $id)
         );
     }
 }
