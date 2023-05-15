@@ -6,12 +6,14 @@ namespace Mashbo\CoreRepository\Application\CQRS\Query;
 
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-/** @template T */
+/**
+ * @template T
+ */
 interface QueryHandlerInterface
 {
     /**
      * @param Query<T> $query
      * @return T
      */
-    public function __invoke(Query $query): mixed;
+    public function __invoke($query);
 }
