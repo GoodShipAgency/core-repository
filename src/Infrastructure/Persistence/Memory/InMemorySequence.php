@@ -13,7 +13,6 @@ class InMemorySequence
     public function apply(object $object): int
     {
         $property = $this->getReflectionProperty($object);
-        $property->setAccessible(true);
 
         /** @var ?int|mixed $id */
         $id = $property->getValue($object);
