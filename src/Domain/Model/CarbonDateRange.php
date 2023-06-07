@@ -130,8 +130,8 @@ class CarbonDateRange
 
     public function isDateInRange(CarbonImmutable $date): bool
     {
-        return $date->greaterThanOrEqualTo($this->getFrom()) &&
-            $date->lessThanOrEqualTo($this->getTo());
+        return $date->greaterThanOrEqualTo($this->getFrom())
+            && $date->lessThanOrEqualTo($this->getTo());
     }
 
     private function resolvePeriod(CarbonPeriod $period): CarbonPeriod
