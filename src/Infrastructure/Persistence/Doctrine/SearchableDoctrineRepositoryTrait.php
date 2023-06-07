@@ -65,9 +65,10 @@ trait SearchableDoctrineRepositoryTrait
     public function batch(FilterList $filterList): \Generator
     {
         $qb = $this->getFilteredQueryBuilder($filterList);
-        $this->selectAll($qb);
         $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC')
             ->distinct();
+
+        $this->selectAll($qb);
 
         $query = $qb->getQuery();
 
