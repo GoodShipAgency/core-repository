@@ -75,6 +75,11 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
         throw new NoFirstResultException();
     }
 
+    /**
+     * @psalm-param Closure(T):U $func
+     * @psalm-return iterable<int|string, U>
+     * @psalm-template U
+     */
     public function map(callable $callable): iterable
     {
         foreach ($this->results as $key => $result) {
