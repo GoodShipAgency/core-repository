@@ -76,7 +76,7 @@ class SearchResults implements \Traversable, \IteratorAggregate, \Countable, \Ar
     }
 
     /**
-     * @psalm-param Closure(T):U $func
+     * @psalm-param Closure(T):U $callable
      * @psalm-return iterable<int|string, U>
      * @psalm-template U
      */
