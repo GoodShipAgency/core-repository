@@ -15,7 +15,7 @@ trait ReportableDoctrineRepositoryTrait
     abstract protected function getFilteredQueryBuilder(FilterList $filters): QueryBuilder;
 
         /**
-     * @template T of Report
+     * @psalm-template-covariant T of Report
      * @param T $report
      * @return T
      */
