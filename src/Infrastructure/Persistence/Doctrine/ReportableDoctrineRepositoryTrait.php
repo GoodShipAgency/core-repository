@@ -14,8 +14,10 @@ trait ReportableDoctrineRepositoryTrait
 
     abstract protected function getFilteredQueryBuilder(FilterList $filters): QueryBuilder;
 
-    /**
-     * @psalm-suppress MoreSpecificReturnType
+        /**
+     * @template T of Report
+     * @param T $report
+     * @return T
      */
     public function createReport(Report $report, FilterList $filters): Report
     {
@@ -29,10 +31,6 @@ trait ReportableDoctrineRepositoryTrait
             $report->addRecordFromArray($result);
         }
 
-        /*
-         * @psalm-suppress InvalidStringClass
-         * @psalm-suppress LessSpecificReturnStatement
-         */
         return $report;
     }
 }
