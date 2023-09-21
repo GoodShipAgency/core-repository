@@ -9,10 +9,12 @@ use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Reports\Record\ReportRecord;
 
 /**
- * @template-implements \IteratorAggregate<int, ReportRecord>
+ * @template T of ReportRecord
+ * @template-implements \IteratorAggregate<int, T>
  */
 abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
 {
+    /** @var \ArrayIterator<array-key, T> */
     protected \ArrayIterator $records;
 
     protected FilterList $filterList;
@@ -33,6 +35,7 @@ abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
         }
     }
 
+    /** @return \ArrayIterator<array-key, T> */
     public function getIterator(): \ArrayIterator
     {
         return $this->records;
@@ -48,12 +51,10 @@ abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
 
     /**
      * @psalm-suppress MixedReturnStatement
+     * @return T
      */
     public function first(): ReportRecord
     {
-        /**
-         * @var ReportRecord $record
-         */
         foreach ($this->records as $record) {
             return $record;
         }
@@ -72,6 +73,9 @@ abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
         }
     }
 
+    /**
+     * @param T $record
+     */
     public function add(ReportRecord $record): void
     {
         $this->records->append($record);
