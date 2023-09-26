@@ -10,6 +10,7 @@ use Mashbo\CoreRepository\Domain\Reports\Report;
 
 trait ReportableDoctrineRepositoryTrait
 {
+    /** @param Report $report */
     abstract protected function reportQueryBuilder(QueryBuilder $qb, Report $report): QueryBuilder;
 
     abstract protected function getFilteredQueryBuilder(FilterList $filters): QueryBuilder;
