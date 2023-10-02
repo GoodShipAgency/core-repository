@@ -8,5 +8,5 @@ namespace Mashbo\CoreRepository\Domain\Repository;
 interface SaveRepositoryInterface
 {
     /** @param T $record */
-    public function save(mixed $record): void;
+    public function save(object $record): void;
 }
