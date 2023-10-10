@@ -6,7 +6,7 @@ namespace Mashbo\CoreRepository\Domain\Repository;
 
 /**
  * @template TId
- * @template T
+ * @template T of object
  *
  * @extends SaveRepositoryInterface<T>
  */
@@ -17,5 +17,5 @@ interface SaveFindRepositoryInterface extends SaveRepositoryInterface
      *
      * @return T
      */
-    public function find(mixed $id): object;
+    public function find(mixed $id): mixed;
 }

@@ -113,7 +113,7 @@ trait SearchableDoctrineRepositoryTrait
         }
     }
 
-    private function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
+    protected function getFilteredQueryBuilder(FilterList $filters): QueryBuilder
     {
         $this->resetAppliedFilters();
 
