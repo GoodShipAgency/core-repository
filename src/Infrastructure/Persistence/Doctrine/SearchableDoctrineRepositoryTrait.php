@@ -17,11 +17,16 @@ use Mashbo\CoreRepository\Domain\SearchResults;
  */
 trait SearchableDoctrineRepositoryTrait
 {
+    /** @var array<class-string<Filter>, DoctrineFilterHandler|class-string<DoctrineFilterHandler>> */
+    private ?array $availableFilters = null;
     private array $appliedFilters = [];
     private static string $idProperty = 'id';
     private static string $alias = 'r';
 
-    abstract protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
+    protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder
+    {
+        throw new \LogicException('Filter of type ' . get_class($filter) . ' is not supported by this repository.');
+    }
 
     abstract protected function getManager(): EntityManagerInterface;
 
@@ -95,9 +100,9 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::getAlias()));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int) $qb->getQuery()->getSingleScalarResult();
+            return (int)$qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -106,7 +111,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int) $result;
+                $count = $count + (int)$result;
             });
 
             return $count;
@@ -143,7 +148,35 @@ trait SearchableDoctrineRepositoryTrait
             return $qb;
         }
 
-        return $this->applyFilter($qb, $filter);
+        return $this->invokeFilter($qb, $filter);
+    }
+
+    private function invokeFilter(QueryBuilder $queryBuilder, Filter $filter): QueryBuilder
+    {
+        if ($this->availableFilters === null) {
+            $this->availableFilters = $this->configureFilters();
+        }
+
+        if (array_key_exists(get_class($filter), $this->availableFilters)) {
+            $handler = $this->availableFilters[get_class($filter)];
+
+            if (is_string($handler)) {
+                $handler = new $handler();
+            }
+
+            if (!$handler instanceof DoctrineFilterHandler) {
+                throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
+            }
+
+            return $handler->handle($queryBuilder, $filter);
+        }
+
+        // Fallback to old method of filter handling
+        return $this->applyFilter($queryBuilder, $filter);
+    }
+
+    private function configureFilters(): array
+    {
     }
 
     private static function getAliasedIdProperty(): string

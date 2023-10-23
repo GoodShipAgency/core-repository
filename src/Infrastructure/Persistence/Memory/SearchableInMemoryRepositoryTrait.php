@@ -16,6 +16,9 @@ use Mashbo\CoreRepository\Domain\SearchResults;
  */
 trait SearchableInMemoryRepositoryTrait
 {
+    /** @var array<class-string<Filter>, InMemoryFilterHandler|class-string<InMemoryFilterHandler>> */
+    private ?array $availableFilters = null;
+
     /** @param T $entity */
     abstract protected function matchesFilter(mixed $entity, Filter $filter): bool;
 
@@ -105,6 +108,24 @@ trait SearchableInMemoryRepositoryTrait
 
             if ($filter instanceof OrderByFilter) {
                 continue;
+            }
+
+            if (array_key_exists(get_class($filter), $this->availableFilters)) {
+                $handler = $this->availableFilters[get_class($filter)];
+
+                if (is_string($handler)) {
+                    $handler = new $handler();
+                }
+
+                if (!$handler instanceof InMemoryFilterHandler) {
+                    throw new \RuntimeException(sprintf(
+                        'Filter handler for %s is not an instance of %s',
+                        get_class($filter),
+                        InMemoryFilterHandler::class
+                    ));
+                }
+
+                return $handler->handle($filter);
             }
 
             if (!$this->matchesFilter($entity, $filter)) {
