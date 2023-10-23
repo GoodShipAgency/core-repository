@@ -177,9 +177,11 @@ trait SearchableDoctrineRepositoryTrait
             }
 
             if ($handler instanceof FilterJoinerInterface) {
-                $joiner = $handler->getJoiner();
+                if ($handler->hasJoiner()) {
+                    $joiner = $handler->getJoiner();
 
-                $joiner->apply($queryBuilder);
+                    $joiner->apply($queryBuilder);
+                }
             }
 
             return $handler->handle($this->getAliasNameGenerator(), $this->getParameterNameGenerator(), $queryBuilder, $filter);

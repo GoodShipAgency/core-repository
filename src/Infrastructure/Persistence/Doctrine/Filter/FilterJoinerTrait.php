@@ -15,11 +15,18 @@ trait FilterJoinerTrait
         return $this;
     }
 
-    public function getJoiner(): JoinerInterface {
+    public function getJoiner(): JoinerInterface
+    {
         if (null === $this->joiner) {
             throw new \RuntimeException('Joiner not set');
         }
 
         return $this->joiner;
+    }
+
+
+    public function hasJoiner(): bool
+    {
+        return null !== $this->joiner;
     }
 }

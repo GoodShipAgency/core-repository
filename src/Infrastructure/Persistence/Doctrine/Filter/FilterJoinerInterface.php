@@ -9,4 +9,6 @@ interface FilterJoinerInterface
     public function withJoiner(JoinerInterface $joiner): self;
 
     public function getJoiner(): JoinerInterface;
+
+    public function hasJoiner(): bool;
 }
