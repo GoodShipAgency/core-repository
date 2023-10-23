@@ -23,6 +23,9 @@ trait SearchableDoctrineRepositoryTrait
     private static string $idProperty = 'id';
     private static string $alias = 'r';
 
+    private ?ParameterNameGeneratorInterface $parameterNameGenerator = null;
+    private ?AliasNameGeneratorInterface $aliasNameGenerator = null;
+
     protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder
     {
         throw new \LogicException('Filter of type ' . get_class($filter) . ' is not supported by this repository.');
@@ -168,7 +171,7 @@ trait SearchableDoctrineRepositoryTrait
                 throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
             }
 
-            return $handler->handle($queryBuilder, $filter);
+            return $handler->handle($this->getAliasNameGenerator(), $this->getParameterNameGenerator(), $queryBuilder, $filter);
         }
 
         // Fallback to old method of filter handling
@@ -219,5 +222,23 @@ trait SearchableDoctrineRepositoryTrait
         );
 
         return $paginator;
+    }
+
+    protected function getParameterNameGenerator(): ParameterNameGeneratorInterface
+    {
+        if ($this->parameterNameGenerator === null) {
+            $this->parameterNameGenerator = new ParameterNameGenerator();
+        }
+
+        return $this->parameterNameGenerator;
+    }
+
+    protected function getAliasNameGenerator(): AliasNameGeneratorInterface
+    {
+        if ($this->aliasNameGenerator === null) {
+            $this->aliasNameGenerator = new AliasNameGenerator();
+        }
+
+        return $this->aliasNameGenerator;
     }
 }

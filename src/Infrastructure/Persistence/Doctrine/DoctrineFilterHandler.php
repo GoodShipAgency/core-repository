@@ -9,5 +9,10 @@ use Mashbo\CoreRepository\Domain\Filtering\Filter;
 interface DoctrineFilterHandler
 {
     /** @param T $filter */
-    public function handle(QueryBuilder $qb, Filter $filter): QueryBuilder;
+    public function handle(
+        AliasNameGeneratorInterface $aliasNameGenerator,
+        ParameterNameGeneratorInterface $parameterNameGenerator,
+        QueryBuilder $qb,
+        Filter $filter
+    ): QueryBuilder;
 }
