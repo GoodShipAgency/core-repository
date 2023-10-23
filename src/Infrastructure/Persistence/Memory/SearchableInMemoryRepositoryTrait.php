@@ -110,6 +110,10 @@ trait SearchableInMemoryRepositoryTrait
                 continue;
             }
 
+            if ($this->availableFilters === null) {
+                $this->availableFilters = $this->configureFilters();
+            }
+
             if (array_key_exists(get_class($filter), $this->availableFilters)) {
                 $handler = $this->availableFilters[get_class($filter)];
 
@@ -160,5 +164,10 @@ trait SearchableInMemoryRepositoryTrait
         }
 
         return $return;
+    }
+
+    private function configureFilters(): array
+    {
+        return [];
     }
 }

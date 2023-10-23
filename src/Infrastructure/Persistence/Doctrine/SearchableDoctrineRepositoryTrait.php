@@ -177,6 +177,7 @@ trait SearchableDoctrineRepositoryTrait
 
     private function configureFilters(): array
     {
+        return [];
     }
 
     private static function getAliasedIdProperty(): string
