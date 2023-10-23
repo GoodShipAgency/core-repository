@@ -1,6 +1,7 @@
 <?php
 
-namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
+namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter;
+
 
 class AliasNameGenerator implements AliasNameGeneratorInterface
 {

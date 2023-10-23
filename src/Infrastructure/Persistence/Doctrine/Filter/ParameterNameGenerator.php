@@ -1,6 +1,6 @@
 <?php
 
-namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
+namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter;
 
 class ParameterNameGenerator implements ParameterNameGeneratorInterface
 {

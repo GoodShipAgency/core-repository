@@ -11,6 +11,10 @@ use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGenerator;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGeneratorInterface;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGenerator;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGeneratorInterface;
 
 /**
  * @template T
