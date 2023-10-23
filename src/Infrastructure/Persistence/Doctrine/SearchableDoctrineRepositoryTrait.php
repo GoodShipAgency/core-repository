@@ -13,6 +13,7 @@ use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGenerator;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGeneratorInterface;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\FilterJoinerInterface;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGenerator;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGeneratorInterface;
 
@@ -173,6 +174,12 @@ trait SearchableDoctrineRepositoryTrait
 
             if (!$handler instanceof DoctrineFilterHandler) {
                 throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
+            }
+
+            if ($handler instanceof FilterJoinerInterface) {
+                $joiner = $handler->getJoiner();
+
+                $joiner->apply($queryBuilder);
             }
 
             return $handler->handle($this->getAliasNameGenerator(), $this->getParameterNameGenerator(), $queryBuilder, $filter);
