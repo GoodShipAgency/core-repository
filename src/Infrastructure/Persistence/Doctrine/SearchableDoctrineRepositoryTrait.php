@@ -192,7 +192,7 @@ trait SearchableDoctrineRepositoryTrait
         } else {
             // Is one of the keys an interface implemented by the filter?
             foreach ($this->availableFilters as $filterClass => $handlerIdentifier) {
-                if (is_subclass_of($filterClass, get_class($filter))) {
+                if (is_subclass_of(get_class($filter), $filterClass)) {
                     $handler = $handlerIdentifier;
                     break;
                 }
