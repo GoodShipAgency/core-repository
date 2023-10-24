@@ -165,17 +165,9 @@ trait SearchableDoctrineRepositoryTrait
             $this->availableFilters = $this->configureFilters();
         }
 
-        if (array_key_exists(get_class($filter), $this->availableFilters)) {
-            $handler = $this->availableFilters[get_class($filter)];
+        $handler = $this->getFilterHandler($filter);
 
-            if (is_string($handler)) {
-                $handler = new $handler();
-            }
-
-            if (!$handler instanceof DoctrineFilterHandler) {
-                throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
-            }
-
+        if ($handler !== null) {
             if ($handler instanceof FilterJoinerInterface) {
                 if ($handler->hasJoiner()) {
                     $joiner = $handler->getJoiner();
@@ -189,6 +181,38 @@ trait SearchableDoctrineRepositoryTrait
 
         // Fallback to old method of filter handling
         return $this->applyFilter($queryBuilder, $filter);
+    }
+
+    private function getFilterHandler(Filter $filter): ?DoctrineFilterHandler
+    {
+        $handler = null;
+
+        if (array_key_exists(get_class($filter), $this->availableFilters)) {
+            $handler = $this->availableFilters[get_class($filter)];
+        } else {
+            // Is one of the keys an interface implemented by the filter?
+            foreach ($this->availableFilters as $filterClass => $handlerIdentifier) {
+                if (is_subclass_of($filterClass, get_class($filter))) {
+                    $handler = $handlerIdentifier;
+                    break;
+                }
+            }
+        }
+
+        if ($handler === null) {
+            return null;
+        }
+
+        if (is_string($handler)) {
+            $handler = new $handler();
+        }
+
+        if (!$handler instanceof DoctrineFilterHandler) {
+            throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
+        }
+
+        return $handler;
+
     }
 
     private function configureFilters(): array
