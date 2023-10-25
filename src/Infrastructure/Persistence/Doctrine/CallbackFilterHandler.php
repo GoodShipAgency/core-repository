@@ -10,7 +10,7 @@ use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNa
 /** @implements DoctrineFilterHandler<Filter> */
 class CallbackFilterHandler implements DoctrineFilterHandler
 {
-    /** @param (\Closure(Filter=): QueryBuilder) $callback */
+    /** @param (\Closure(QueryBuilder, Filter=): QueryBuilder) $callback */
     public function __construct(
         private readonly \Closure $callback
     )
@@ -19,6 +19,6 @@ class CallbackFilterHandler implements DoctrineFilterHandler
 
     public function handle(AliasNameGeneratorInterface $aliasNameGenerator, ParameterNameGeneratorInterface $parameterNameGenerator, QueryBuilder $qb, Filter $filter): QueryBuilder
     {
-        return ($this->callback)($filter);
+        return ($this->callback)($qb, $filter);
     }
 }
