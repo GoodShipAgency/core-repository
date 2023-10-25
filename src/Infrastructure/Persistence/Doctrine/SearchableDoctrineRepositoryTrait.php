@@ -31,11 +31,6 @@ trait SearchableDoctrineRepositoryTrait
     private ?ParameterNameGeneratorInterface $parameterNameGenerator = null;
     private ?AliasNameGeneratorInterface $aliasNameGenerator = null;
 
-    protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder
-    {
-        throw new \LogicException('Filter of type ' . get_class($filter) . ' is not supported by this repository.');
-    }
-
     abstract protected function getManager(): EntityManagerInterface;
 
     /** @return class-string<T> */
@@ -179,8 +174,7 @@ trait SearchableDoctrineRepositoryTrait
             return $handler->handle($this->getAliasNameGenerator(), $this->getParameterNameGenerator(), $queryBuilder, $filter);
         }
 
-        // Fallback to old method of filter handling
-        return $this->applyFilter($queryBuilder, $filter);
+        throw new \LogicException('Filter of type ' . get_class($filter) . ' is not supported by this repository.');
     }
 
     private function getFilterHandler(Filter $filter): ?DoctrineFilterHandler
@@ -215,10 +209,7 @@ trait SearchableDoctrineRepositoryTrait
 
     }
 
-    private function configureFilters(): array
-    {
-        return [];
-    }
+    abstract protected function configureFilters(): array;
 
     private static function getAliasedIdProperty(): string
     {
