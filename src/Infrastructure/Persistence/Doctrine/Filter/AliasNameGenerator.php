@@ -9,6 +9,6 @@ class AliasNameGenerator implements AliasNameGeneratorInterface
 
     public function generate(): string
     {
-        return 'a' . $this->aliasCounter++;
+        return 'ma' . $this->aliasCounter++;
     }
 }
