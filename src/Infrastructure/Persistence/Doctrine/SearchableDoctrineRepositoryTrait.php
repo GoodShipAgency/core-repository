@@ -11,17 +11,25 @@ use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGenerator;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGeneratorInterface;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\FilterJoinerInterface;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGenerator;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGeneratorInterface;
 
 /**
  * @template T
  */
 trait SearchableDoctrineRepositoryTrait
 {
+    /** @var array<class-string<Filter>, DoctrineFilterHandler|class-string<DoctrineFilterHandler>> */
+    private ?array $availableFilters = null;
     private array $appliedFilters = [];
     private static string $idProperty = 'id';
     private static string $alias = 'r';
 
-    abstract protected function applyFilter(QueryBuilder $qb, Filter $filter): QueryBuilder;
+    private ?ParameterNameGeneratorInterface $parameterNameGenerator = null;
+    private ?AliasNameGeneratorInterface $aliasNameGenerator = null;
 
     abstract protected function getManager(): EntityManagerInterface;
 
@@ -95,9 +103,9 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::getAlias()));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int) $qb->getQuery()->getSingleScalarResult();
+            return (int)$qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -106,7 +114,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int) $result;
+                $count = $count + (int)$result;
             });
 
             return $count;
@@ -143,8 +151,65 @@ trait SearchableDoctrineRepositoryTrait
             return $qb;
         }
 
-        return $this->applyFilter($qb, $filter);
+        return $this->invokeFilter($qb, $filter);
     }
+
+    private function invokeFilter(QueryBuilder $queryBuilder, Filter $filter): QueryBuilder
+    {
+        if ($this->availableFilters === null) {
+            $this->availableFilters = $this->configureFilters();
+        }
+
+        $handler = $this->getFilterHandler($filter);
+
+        if ($handler !== null) {
+            if ($handler instanceof FilterJoinerInterface) {
+                if ($handler->hasJoiner()) {
+                    $joiner = $handler->getJoiner();
+
+                    $joiner->apply($queryBuilder);
+                }
+            }
+
+            return $handler->handle($this->getAliasNameGenerator(), $this->getParameterNameGenerator(), $queryBuilder, $filter);
+        }
+
+        throw new \LogicException('Filter of type ' . get_class($filter) . ' is not supported by this repository.');
+    }
+
+    private function getFilterHandler(Filter $filter): ?DoctrineFilterHandler
+    {
+        $handler = null;
+
+        if (array_key_exists(get_class($filter), $this->availableFilters)) {
+            $handler = $this->availableFilters[get_class($filter)];
+        } else {
+            // Is one of the keys an interface implemented by the filter?
+            foreach ($this->availableFilters as $filterClass => $handlerIdentifier) {
+                if (is_subclass_of(get_class($filter), $filterClass)) {
+                    $handler = $handlerIdentifier;
+                    break;
+                }
+            }
+        }
+
+        if ($handler === null) {
+            return null;
+        }
+
+        if (is_string($handler)) {
+            $handler = new $handler();
+        }
+
+        if (!$handler instanceof DoctrineFilterHandler) {
+            throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
+        }
+
+        return $handler;
+
+    }
+
+    abstract protected function configureFilters(): array;
 
     private static function getAliasedIdProperty(): string
     {
@@ -185,5 +250,23 @@ trait SearchableDoctrineRepositoryTrait
         );
 
         return $paginator;
+    }
+
+    protected function getParameterNameGenerator(): ParameterNameGeneratorInterface
+    {
+        if ($this->parameterNameGenerator === null) {
+            $this->parameterNameGenerator = new ParameterNameGenerator();
+        }
+
+        return $this->parameterNameGenerator;
+    }
+
+    protected function getAliasNameGenerator(): AliasNameGeneratorInterface
+    {
+        if ($this->aliasNameGenerator === null) {
+            $this->aliasNameGenerator = new AliasNameGenerator();
+        }
+
+        return $this->aliasNameGenerator;
     }
 }

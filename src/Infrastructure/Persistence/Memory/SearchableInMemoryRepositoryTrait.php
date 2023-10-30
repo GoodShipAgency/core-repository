@@ -140,4 +140,9 @@ trait SearchableInMemoryRepositoryTrait
 
         return $return;
     }
+
+    private function configureFilters(): array
+    {
+        return [];
+    }
 }
