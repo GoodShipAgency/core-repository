@@ -215,7 +215,7 @@ trait SearchableDoctrineRepositoryTrait
     protected function getPaginatedQueryExecutor(): PaginatedQueryExecutorInterface
     {
         if ($this->paginatedQueryExecutor === null) {
-            $this->paginatedQueryExecutor = new PaginatedQueryExecutor();
+            throw new \LogicException('No paginated query executor has been set on this repository. Did you alias PaginatedQueryExecutorInterface in services.yaml?');
         }
 
         return $this->paginatedQueryExecutor;

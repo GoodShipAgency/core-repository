@@ -9,7 +9,7 @@ use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
 
-class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
+class LegacyPaginatedQueryExecutor implements PaginatedQueryExecutorInterface
 {
     private string $idProperty = 'id';
 
@@ -45,10 +45,12 @@ class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
                 )
             );
 
+        /** @psalm-suppress MixedArgument */
         $results = new \ArrayIterator($outerQueryBuilder->getQuery()->execute());
 
         $pageInfo = null;
         if ($page !== null) {
+            /** @psalm-suppress RedundantCastGivenDocblockType */
             $idCountResult = (array) $innerQueryBuilder
                 ->select("COUNT(DISTINCT {$this->idProperty})")
                 ->resetDQLPart('orderBy')
@@ -62,6 +64,7 @@ class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
                 $count = (int) $count + (int) $result;
             });
 
+            /** @psalm-suppress MixedArgument */
             $pageInfo = new PagedResult(
                 $page,
                 $count,
