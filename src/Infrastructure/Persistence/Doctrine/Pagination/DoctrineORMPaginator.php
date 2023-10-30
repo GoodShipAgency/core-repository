@@ -20,11 +20,11 @@ class DoctrineORMPaginator implements PaginatedQueryExecutorInterface
     public function execute(QueryBuilder $queryBuilder, ?LimitOffsetPage $page): SearchResults
     {
         if ($page === null) {
+            /**
+             * @var \Traversable $result
+             * This isn't always a \Traversable, but it's what ArrayIterator expects and it works regardless
+             */
             $result = $queryBuilder->getQuery()->getResult();
-
-            if (!$result instanceof \Traversable) {
-                throw new \RuntimeException('Query result must be traversable');
-            }
 
             return new SearchResults(new \ArrayIterator(iterator_to_array($result)), null);
         }
