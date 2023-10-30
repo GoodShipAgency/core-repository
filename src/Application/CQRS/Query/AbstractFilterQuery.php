@@ -9,7 +9,9 @@ use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 
 /**
  * @psalm-consistent-constructor
+ *
  * @template T
+ *
  * @implements Query<T>
  */
 abstract class AbstractFilterQuery implements Query

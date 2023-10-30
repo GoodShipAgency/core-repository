@@ -1,7 +1,8 @@
 <?php
 
-namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter;
+declare(strict_types=1);
 
+namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter;
 
 class AliasNameGenerator implements AliasNameGeneratorInterface
 {
@@ -9,6 +10,6 @@ class AliasNameGenerator implements AliasNameGeneratorInterface
 
     public function generate(): string
     {
-        return 'ma' . $this->aliasCounter++;
+        return 'ma'.$this->aliasCounter++;
     }
 }

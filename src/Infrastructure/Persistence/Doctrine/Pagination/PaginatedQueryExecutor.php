@@ -17,7 +17,6 @@ class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
     {
     }
 
-
     public function execute(QueryBuilder $queryBuilder, ?LimitOffsetPage $page): SearchResults
     {
         $innerQueryBuilder = clone $queryBuilder;

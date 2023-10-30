@@ -30,7 +30,7 @@ class MessengerQueryBus implements QueryBusInterface
     public function handle(Query $message): mixed
     {
         /** @var T $result */
-        $result =  $this->handleQuery($message);
+        $result = $this->handleQuery($message);
 
         return $result;
     }

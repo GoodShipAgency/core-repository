@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter;
 
 class ParameterNameGenerator implements ParameterNameGeneratorInterface
@@ -8,6 +10,6 @@ class ParameterNameGenerator implements ParameterNameGeneratorInterface
 
     public function generate(): string
     {
-        return 'p' . $this->parameterCounter++;
+        return 'p'.$this->parameterCounter++;
     }
 }
