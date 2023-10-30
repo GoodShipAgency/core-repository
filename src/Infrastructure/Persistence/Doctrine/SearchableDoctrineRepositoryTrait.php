@@ -9,13 +9,14 @@ use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
-use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGenerator;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGeneratorInterface;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\FilterJoinerInterface;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGenerator;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGeneratorInterface;
+use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Pagination\PaginatedQueryExecutorInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * @template T
@@ -31,6 +32,8 @@ trait SearchableDoctrineRepositoryTrait
     private ?ParameterNameGeneratorInterface $parameterNameGenerator = null;
     private ?AliasNameGeneratorInterface $aliasNameGenerator = null;
 
+    private ?PaginatedQueryExecutorInterface $paginatedQueryExecutor = null;
+
     abstract protected function getManager(): EntityManagerInterface;
 
     /** @return class-string<T> */
@@ -44,27 +47,27 @@ trait SearchableDoctrineRepositoryTrait
         return static::$alias;
     }
 
+    #[Required]
+    public function setPaginatedQueryExecutor(PaginatedQueryExecutorInterface $paginatedQueryExecutor): void
+    {
+        $this->paginatedQueryExecutor = $paginatedQueryExecutor;
+    }
+
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      *
      * @return SearchResults<T>
      */
-    public function search(FilterList $filters, ?LimitOffsetPage $page = null): SearchResults
+    public function search(FilterList $filters, LimitOffsetPage $page = null): SearchResults
     {
-        $paginator = $this->getPaginatedQueryExecutor($filters);
+        $qb = $this->getFilteredQueryBuilder($filters)
+                ->addOrderBy(static::getAliasedIdProperty(), 'ASC');
 
-        /** @var SearchResults<T> $results */
-        $results = $paginator->execute(
-            $page,
-            /**
-             * @param $results \ArrayIterator<T>
-             *
-             * @return SearchResults<T>
-             */
-            function (\ArrayIterator $results, ?PagedResult $pageInfo): SearchResults {
-                return new SearchResults($results, $pageInfo);
-            }
-        );
+        $qb = $this->selectAll($qb);
+
+        $paginator = $this->getPaginatedQueryExecutor();
+
+        $results = $paginator->execute($qb, $page);
 
         return $results;
     }
@@ -103,9 +106,9 @@ trait SearchableDoctrineRepositoryTrait
         $qb->select($qb->expr()->count(static::getAlias()));
 
         if (empty($qb->getDQLPart('groupBy'))) {
-            return (int)$qb->getQuery()->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } else {
-            $idCountResult = (array)$qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
+            $idCountResult = (array) $qb->select(sprintf('COUNT(DISTINCT %s)', static::getAliasedIdProperty()))
                 ->resetDQLPart('orderBy')
                 ->getQuery()
                 ->getScalarResult();
@@ -114,7 +117,7 @@ trait SearchableDoctrineRepositoryTrait
             // how many rows are returned
             $count = 0;
             array_walk_recursive($idCountResult, function (string $result) use (&$count) {
-                $count = $count + (int)$result;
+                $count += (int) $result;
             });
 
             return $count;
@@ -174,7 +177,7 @@ trait SearchableDoctrineRepositoryTrait
             return $handler->handle($this->getAliasNameGenerator(), $this->getParameterNameGenerator(), $queryBuilder, $filter);
         }
 
-        throw new \LogicException('Filter of type ' . get_class($filter) . ' is not supported by this repository.');
+        throw new \LogicException('Filter of type '.get_class($filter).' is not supported by this repository.');
     }
 
     private function getFilterHandler(Filter $filter): ?DoctrineFilterHandler
@@ -202,11 +205,20 @@ trait SearchableDoctrineRepositoryTrait
         }
 
         if (!$handler instanceof DoctrineFilterHandler) {
-            throw new \LogicException('Filter handler for ' . get_class($filter) . ' is not an instance of ' . DoctrineFilterHandler::class);
+            throw new \LogicException('Filter handler for '.get_class($filter).' is not an instance of '.DoctrineFilterHandler::class);
         }
 
         return $handler;
+    }
 
+    // You can override this method in repositories to provide a custom paginated query executor on a per-repository basis
+    protected function getPaginatedQueryExecutor(): PaginatedQueryExecutorInterface
+    {
+        if ($this->paginatedQueryExecutor === null) {
+            throw new \LogicException('No paginated query executor has been set on this repository. Did you alias PaginatedQueryExecutorInterface in services.yaml?');
+        }
+
+        return $this->paginatedQueryExecutor;
     }
 
     abstract protected function configureFilters(): array;
@@ -234,22 +246,6 @@ trait SearchableDoctrineRepositoryTrait
     private function registerAppliedFilter(Filter $filter): void
     {
         $this->appliedFilters[get_class($filter)] = $filter;
-    }
-
-    protected function getPaginatedQueryExecutor(FilterList $filters): PaginatedQueryExecutorInterface
-    {
-        $paginator = new PaginatedQueryExecutor(
-            function () use ($filters) {
-                $qb = $this->getFilteredQueryBuilder($filters);
-                $this->selectAll($qb);
-                $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC');
-
-                return $qb;
-            },
-            static::getAliasedIdProperty()
-        );
-
-        return $paginator;
     }
 
     protected function getParameterNameGenerator(): ParameterNameGeneratorInterface

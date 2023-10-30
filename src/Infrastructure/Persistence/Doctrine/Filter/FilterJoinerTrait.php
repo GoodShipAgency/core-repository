@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter;
 
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Joiner\JoinerInterface;
@@ -17,16 +19,15 @@ trait FilterJoinerTrait
 
     public function getJoiner(): JoinerInterface
     {
-        if (null === $this->joiner) {
+        if ($this->joiner === null) {
             throw new \RuntimeException('Joiner not set');
         }
 
         return $this->joiner;
     }
 
-
     public function hasJoiner(): bool
     {
-        return null !== $this->joiner;
+        return $this->joiner !== null;
     }
 }

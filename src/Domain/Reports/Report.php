@@ -10,6 +10,7 @@ use Mashbo\CoreRepository\Domain\Reports\Record\ReportRecord;
 
 /**
  * @template T of ReportRecord
+ *
  * @template-implements \IteratorAggregate<int, T>
  */
 abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
@@ -51,6 +52,7 @@ abstract class Report implements ReportInterface, \IteratorAggregate, \Countable
 
     /**
      * @psalm-suppress MixedReturnStatement
+     *
      * @return T
      */
     public function first(): ReportRecord
