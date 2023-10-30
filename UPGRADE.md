@@ -14,3 +14,10 @@ protected function configureFilters(): array
 {
     return [Filter::class => (new CallbackFilterHandler($this->applyFilter(...)))];
 }
+```
+
+To Upgrade to 8.*
+
+- The Legacy PaginatedQueryExecutor no longer supports tables where the primary key is not called `id`. Either implement a different paginator or rename your primary key to `id`.
+- You must enable `CoreRepositoryBundle` in your application `Bundles.php`
+- Create a `core_repository.yaml` configuration file in `config`

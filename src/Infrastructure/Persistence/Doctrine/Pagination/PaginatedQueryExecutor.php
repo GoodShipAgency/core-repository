@@ -7,23 +7,20 @@ namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
 use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
 use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
+use Mashbo\CoreRepository\Domain\SearchResults;
 
 class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
 {
-    public function __construct(private \Closure $queryBuilder, private string $idProperty)
+    private string $idProperty = 'id';
+
+    public function __construct()
     {
     }
 
-    /**
-     * @param callable(\ArrayIterator, ?PagedResult) $callback
-     *
-     * @psalm-suppress MixedArgument
-     * @psalm-suppress MixedMethodCall
-     */
-    public function execute(?LimitOffsetPage $page, callable $callback): mixed
+
+    public function execute(QueryBuilder $queryBuilder, ?LimitOffsetPage $page): SearchResults
     {
-        /** @var QueryBuilder $innerQueryBuilder */
-        $innerQueryBuilder = call_user_func($this->queryBuilder);
+        $innerQueryBuilder = clone $queryBuilder;
         $outerQueryBuilder = clone $innerQueryBuilder;
 
         $innerQueryBuilder
@@ -53,7 +50,7 @@ class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
 
         $pageInfo = null;
         if ($page !== null) {
-            $idCountResult = (array) call_user_func($this->queryBuilder)
+            $idCountResult = (array) $innerQueryBuilder
                 ->select("COUNT(DISTINCT {$this->idProperty})")
                 ->resetDQLPart('orderBy')
                 ->getQuery()
@@ -66,7 +63,6 @@ class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
                 $count = (int) $count + (int) $result;
             });
 
-            /** @var int $count */
             $pageInfo = new PagedResult(
                 $page,
                 $count,
@@ -74,6 +70,6 @@ class PaginatedQueryExecutor implements PaginatedQueryExecutorInterface
             );
         }
 
-        return $callback($results, $pageInfo);
+        return new SearchResults($results, $pageInfo);
     }
 }

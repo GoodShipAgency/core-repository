@@ -9,13 +9,13 @@ use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Filtering\Filter;
 use Mashbo\CoreRepository\Domain\Filtering\FilterList;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
-use Mashbo\CoreRepository\Domain\Pagination\PagedResult;
 use Mashbo\CoreRepository\Domain\SearchResults;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGenerator;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\AliasNameGeneratorInterface;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\FilterJoinerInterface;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGenerator;
 use Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Filter\ParameterNameGeneratorInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * @template T
@@ -31,6 +31,8 @@ trait SearchableDoctrineRepositoryTrait
     private ?ParameterNameGeneratorInterface $parameterNameGenerator = null;
     private ?AliasNameGeneratorInterface $aliasNameGenerator = null;
 
+    private ?PaginatedQueryExecutorInterface $paginatedQueryExecutor = null;
+
     abstract protected function getManager(): EntityManagerInterface;
 
     /** @return class-string<T> */
@@ -44,6 +46,12 @@ trait SearchableDoctrineRepositoryTrait
         return static::$alias;
     }
 
+    #[Required]
+    public function setPaginatedQueryExecutor(PaginatedQueryExecutorInterface $paginatedQueryExecutor): void
+    {
+        $this->paginatedQueryExecutor = $paginatedQueryExecutor;
+    }
+
     /**
      * @psalm-suppress MixedReturnTypeCoercion
      *
@@ -51,20 +59,14 @@ trait SearchableDoctrineRepositoryTrait
      */
     public function search(FilterList $filters, ?LimitOffsetPage $page = null): SearchResults
     {
-        $paginator = $this->getPaginatedQueryExecutor($filters);
+        $qb = $this->getFilteredQueryBuilder($filters)
+                ->addOrderBy(static::getAliasedIdProperty(), 'ASC');
 
-        /** @var SearchResults<T> $results */
-        $results = $paginator->execute(
-            $page,
-            /**
-             * @param $results \ArrayIterator<T>
-             *
-             * @return SearchResults<T>
-             */
-            function (\ArrayIterator $results, ?PagedResult $pageInfo): SearchResults {
-                return new SearchResults($results, $pageInfo);
-            }
-        );
+        $qb = $this->selectAll($qb);
+
+        $paginator = $this->getPaginatedQueryExecutor();
+
+        $results = $paginator->execute($qb, $page);
 
         return $results;
     }
@@ -209,6 +211,16 @@ trait SearchableDoctrineRepositoryTrait
 
     }
 
+    // You can override this method in repositories to provide a custom paginated query executor on a per-repository basis
+    protected function getPaginatedQueryExecutor(): PaginatedQueryExecutorInterface
+    {
+        if ($this->paginatedQueryExecutor === null) {
+            $this->paginatedQueryExecutor = new PaginatedQueryExecutor();
+        }
+
+        return $this->paginatedQueryExecutor;
+    }
+
     abstract protected function configureFilters(): array;
 
     private static function getAliasedIdProperty(): string
@@ -236,21 +248,6 @@ trait SearchableDoctrineRepositoryTrait
         $this->appliedFilters[get_class($filter)] = $filter;
     }
 
-    protected function getPaginatedQueryExecutor(FilterList $filters): PaginatedQueryExecutorInterface
-    {
-        $paginator = new PaginatedQueryExecutor(
-            function () use ($filters) {
-                $qb = $this->getFilteredQueryBuilder($filters);
-                $this->selectAll($qb);
-                $qb->addOrderBy(static::getAliasedIdProperty(), 'ASC');
-
-                return $qb;
-            },
-            static::getAliasedIdProperty()
-        );
-
-        return $paginator;
-    }
 
     protected function getParameterNameGenerator(): ParameterNameGeneratorInterface
     {
