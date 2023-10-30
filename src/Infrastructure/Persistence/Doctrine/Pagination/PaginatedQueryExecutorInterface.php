@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine;
+namespace Mashbo\CoreRepository\Infrastructure\Persistence\Doctrine\Pagination;
 
 use Doctrine\ORM\QueryBuilder;
 use Mashbo\CoreRepository\Domain\Pagination\LimitOffsetPage;
