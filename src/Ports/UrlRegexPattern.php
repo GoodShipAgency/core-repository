@@ -14,7 +14,7 @@ class UrlRegexPattern
     public const UuidV6 = Requirement::UUID_V6;
     public const UuidV7 = Requirement::UUID_V7;
     public const UuidV8 = Requirement::UUID_V8;
-    public const Email = Requirement::ASCII_SLUG . '@' . Requirement::ASCII_SLUG;
+    public const Email = Requirement::CATCH_ALL . '\@' . Requirement::CATCH_ALL;
     public const String = Requirement::ASCII_SLUG;
     public const Date = Requirement::DATE_YMD;
     public const Digits = Requirement::DIGITS;
