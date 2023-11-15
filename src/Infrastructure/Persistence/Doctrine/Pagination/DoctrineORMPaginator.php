@@ -22,7 +22,7 @@ class DoctrineORMPaginator implements PaginatedQueryExecutorInterface
         if ($page === null) {
             /**
              * @var \Traversable $result
-             * This isn't always a \Traversable, but it's what ArrayIterator expects and it works regardless
+             *                   This isn't always a \Traversable, but it's what ArrayIterator expects and it works regardless
              */
             $result = $queryBuilder->getQuery()->getResult();
 
