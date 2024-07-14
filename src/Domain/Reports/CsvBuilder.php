@@ -9,7 +9,8 @@ use League\Csv\AbstractCsv;
 interface CsvBuilder
 {
     /**
-     * @param string[] $headers
+     * @param string[]                                                             $headers
+     * @param iterable<mixed, array<array-key, \Stringable|float|int|string|null>> $records
      */
     public function create(array $headers, iterable $records): AbstractCsv;
 

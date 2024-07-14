@@ -17,9 +17,10 @@ class CsvResponseBuilder
     }
 
     /**
-     * @param string[] $headers
+     * @param string[]                                                             $headers
+     * @param iterable<mixed, array<array-key, \Stringable|float|int|string|null>> $records
      */
-    public function createStreamedResponse(array $headers, iterable $records, string $filename, string $delimiter = null): StreamedResponse
+    public function createStreamedResponse(array $headers, iterable $records, string $filename, ?string $delimiter = null): StreamedResponse
     {
         if ($delimiter !== null) {
             $this->csvBuilder->setDelimiter($delimiter);

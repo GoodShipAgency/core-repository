@@ -58,7 +58,7 @@ trait SearchableDoctrineRepositoryTrait
      *
      * @return SearchResults<T>
      */
-    public function search(FilterList $filters, LimitOffsetPage $page = null): SearchResults
+    public function search(FilterList $filters, ?LimitOffsetPage $page = null): SearchResults
     {
         $qb = $this->getFilteredQueryBuilder($filters)
                 ->addOrderBy(static::getAliasedIdProperty(), 'ASC');

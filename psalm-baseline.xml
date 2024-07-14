@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+  <file src="src/Domain/Model/CarbonDateRange.php">
+    <MissingDependency>
+      <code><![CDATA[$interval->toPeriod($this->getFrom(), $this->getTo())]]></code>
+      <code><![CDATA[$period]]></code>
+      <code><![CDATA[CarbonPeriod]]></code>
+      <code><![CDATA[CarbonPeriod]]></code>
+      <code><![CDATA[CarbonPeriod]]></code>
+      <code><![CDATA[CarbonPeriod]]></code>
+    </MissingDependency>
+    <MixedArgument>
+      <code><![CDATA[$period]]></code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code><![CDATA[$period]]></code>
+    </MixedAssignment>
+    <MixedInferredReturnType>
+      <code><![CDATA[CarbonPeriod]]></code>
+      <code><![CDATA[int]]></code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="tests/Unit/Domain/Model/CarbonDateRangeTest.php">
+    <MissingDependency>
+      <code><![CDATA[$period]]></code>
+      <code><![CDATA[$period]]></code>
+    </MissingDependency>
+  </file>
+</files>

@@ -1,5 +1,5 @@
 {
     "require": {
-        "qossmic/deptrac-shim": "^0.18"
+        "qossmic/deptrac": "^2"
     }
 }

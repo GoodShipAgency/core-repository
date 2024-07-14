@@ -83,7 +83,7 @@ class CarbonDateRange
 
     public function getTotalDays(): int
     {
-        $totalDays = $this->getFrom()->diffInDays($this->getTo());
+        $totalDays = (int) ceil($this->getFrom()->diffInDays($this->getTo()));
 
         if ($this->isEndDateIncluded()) {
             ++$totalDays;
@@ -136,8 +136,8 @@ class CarbonDateRange
 
     private function resolvePeriod(CarbonPeriod $period): CarbonPeriod
     {
-        $period->toggleOptions(CarbonPeriod::EXCLUDE_END_DATE, $this->isEndDateExcluded());
-        $period->toggleOptions(CarbonPeriod::IMMUTABLE, true);
+        $period = $period->toggleOptions(CarbonPeriod::EXCLUDE_END_DATE, $this->isEndDateExcluded());
+        $period = $period->toggleOptions(CarbonPeriod::IMMUTABLE, true);
 
         return $period;
     }

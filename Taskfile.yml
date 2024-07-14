@@ -10,11 +10,6 @@ tasks:
     cmds:
       - task --list
 
-  build:
-    desc: Build the docker containers
-    cmds:
-      - docker build --ssh default -t app.churchillrecoverysolutions.co.uk:dev .
-
   composer:install:
     desc: Install packages for tools, app and tests
     cmds:
@@ -46,7 +41,7 @@ tasks:
   host:deptrac:base:
     desc: Run deptrac
     cmds:
-      - tools/deptrac/vendor/bin/deptrac analyse tools/deptrac/depfile.yaml --no-cache
+      - tools/deptrac/vendor/bin/deptrac analyse --config-file=tools/deptrac/deptrac.yaml --no-cache
 
   lint:
     desc: Run the linting
