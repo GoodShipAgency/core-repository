@@ -18,9 +18,4 @@ abstract class AggregateId extends Uuid
     {
         return new static(Uuid::v4()->toRfc4122());
     }
-
-    public function toString(): string
-    {
-        return $this->toRfc4122();
-    }
 }
